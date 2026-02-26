@@ -1,0 +1,32 @@
+{
+    "vouchers": {
+        "subtitle": "כל התווים שלך במקום אחד",
+        "tabs": {
+            "active": "פעילים",
+            "redeemed": "מומשו",
+            "expired": "פג תוקף"
+        },
+        "card": {
+            "provider": "שם נותן ההטבה",
+            "validUntil": "תוקף",
+            "amount": "שח",
+            "usage": "מומשו {{used}} מתוך {{total}}",
+            "remaining": "נותרו {{remaining}} מתוך {{total}}",
+            "redeemCta": "להצגה ומימוש לחץ כאן",
+            "detailsCta": "לפרטים"
+        },
+        "empty": {
+            "active": "אין תווים פעילים",
+            "redeemed": "אין תווים שמומשו",
+            "expired": "אין תווים שפג תוקפם"
+        },
+        "error": {
+            "title": "שגיאה בטעינת התווים",
+            "retry": "נסה שנית"
+        },
+        "additionalActions": "פעולות נוספות",
+        "redemptionHistory": "היסטוריית מימושים",
+        "participatingStores": "בתי עסק מכבדים",
+        "customerService": "שיחת לקוחות"
+    }
+}
