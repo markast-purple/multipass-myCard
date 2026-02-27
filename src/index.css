@@ -33,8 +33,8 @@
 }
 
 :root {
-  --color-primary: #5f83fc;
-  --color-header: #2d4be4;
+  --color-primary: #1a5c5c;
+  --color-header: #1a5c5c;
   --color-gray: #374151;
   --color-gray-soft: #6b7280;
   --font-primary: "Inter", system-ui, -apple-system, sans-serif;
@@ -43,4 +43,14 @@
 .no-bounce {
   overscroll-behavior: none;
   touch-action: pan-y;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
 }

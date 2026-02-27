@@ -10,6 +10,8 @@
             "provider": "שם נותן ההטבה",
             "validUntil": "תוקף",
             "amount": "שח",
+            "amountLabel": "סכום נטען",
+            "remainingLabel": "יתרת ניצול",
             "usage": "מומשו {{used}} מתוך {{total}}",
             "remaining": "נותרו {{remaining}} מתוך {{total}}",
             "redeemCta": "להצגה ומימוש לחץ כאן",
@@ -27,6 +29,34 @@
         "additionalActions": "פעולות נוספות",
         "redemptionHistory": "היסטוריית מימושים",
         "participatingStores": "בתי עסק מכבדים",
-        "customerService": "שיחת לקוחות"
+        "customerService": "שיחת לקוחות",
+        "showMore": "הצג עוד",
+        "showLess": "הצג פחות",
+        "status": {
+            "success": "הושלם",
+            "failed": "נכשל"
+        },
+        "details": {
+            "title": "פרטי תו",
+            "notFound": "התו לא נמצא",
+            "backToList": "חזרה לרשימה",
+            "description": "תיאור"
+        },
+        "redeem": {
+            "title": "מימוש תו",
+            "copyCode": "העתק קוד",
+            "waitingForRedemption": "מתבצעת התחברות למסוף...",
+            "pollingTimeout": "זמן ההמתנה הסתיים",
+            "tryAgain": "נסה שנית",
+            "backToDetails": "חזרה לפרטי התו",
+            "success": "מימוש בוצע בהצלחה!",
+            "successDesc": "התו מומש בהצלחה בבית העסק.",
+            "viewRedeemed": "צפה בתווים שמומשו",
+            "backToActive": "חזרה לתווים פעילים"
+        }
+    },
+    "common": {
+        "back": "חזרה",
+        "copied": "הועתק"
     }
 }

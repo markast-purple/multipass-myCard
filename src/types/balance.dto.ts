@@ -11,6 +11,8 @@ export type BudgetType =
 export interface BalanceItem {
   id: string;
   name: string;
+  provider?: string;
+  description?: string;
   currentBalance: number;
   allocation: number;
   budgetType: BudgetType;
@@ -48,3 +50,14 @@ export interface CardInfoResponse {
 }
 
 export type GetBalancesResponse = CardInfoResponse;
+
+export interface RedemptionHistoryItem {
+  id: string;
+  voucherId: string;
+  name: string;
+  provider: string;
+  amount: number;
+  date: string;
+  status: "success" | "failed";
+  location?: string;
+}

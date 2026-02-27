@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as mainRouteRouteImport } from './routes/(main)/route'
 import { Route as mainIndexRouteImport } from './routes/(main)/index'
+import { Route as mainVouchersVoucherIdIndexRouteImport } from './routes/(main)/vouchers/$voucherId/index'
+import { Route as mainVouchersVoucherIdRedeemRouteImport } from './routes/(main)/vouchers/$voucherId/redeem'
 
 const mainRouteRoute = mainRouteRouteImport.update({
   id: '/(main)',
@@ -21,24 +23,47 @@ const mainIndexRoute = mainIndexRouteImport.update({
   path: '/',
   getParentRoute: () => mainRouteRoute,
 } as any)
+const mainVouchersVoucherIdIndexRoute =
+  mainVouchersVoucherIdIndexRouteImport.update({
+    id: '/vouchers/$voucherId/',
+    path: '/vouchers/$voucherId/',
+    getParentRoute: () => mainRouteRoute,
+  } as any)
+const mainVouchersVoucherIdRedeemRoute =
+  mainVouchersVoucherIdRedeemRouteImport.update({
+    id: '/vouchers/$voucherId/redeem',
+    path: '/vouchers/$voucherId/redeem',
+    getParentRoute: () => mainRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof mainIndexRoute
+  '/vouchers/$voucherId/redeem': typeof mainVouchersVoucherIdRedeemRoute
+  '/vouchers/$voucherId/': typeof mainVouchersVoucherIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof mainIndexRoute
+  '/vouchers/$voucherId/redeem': typeof mainVouchersVoucherIdRedeemRoute
+  '/vouchers/$voucherId': typeof mainVouchersVoucherIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(main)': typeof mainRouteRouteWithChildren
   '/(main)/': typeof mainIndexRoute
+  '/(main)/vouchers/$voucherId/redeem': typeof mainVouchersVoucherIdRedeemRoute
+  '/(main)/vouchers/$voucherId/': typeof mainVouchersVoucherIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/vouchers/$voucherId/redeem' | '/vouchers/$voucherId/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/(main)' | '/(main)/'
+  to: '/' | '/vouchers/$voucherId/redeem' | '/vouchers/$voucherId'
+  id:
+    | '__root__'
+    | '/(main)'
+    | '/(main)/'
+    | '/(main)/vouchers/$voucherId/redeem'
+    | '/(main)/vouchers/$voucherId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -61,15 +86,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof mainIndexRouteImport
       parentRoute: typeof mainRouteRoute
     }
+    '/(main)/vouchers/$voucherId/': {
+      id: '/(main)/vouchers/$voucherId/'
+      path: '/vouchers/$voucherId'
+      fullPath: '/vouchers/$voucherId/'
+      preLoaderRoute: typeof mainVouchersVoucherIdIndexRouteImport
+      parentRoute: typeof mainRouteRoute
+    }
+    '/(main)/vouchers/$voucherId/redeem': {
+      id: '/(main)/vouchers/$voucherId/redeem'
+      path: '/vouchers/$voucherId/redeem'
+      fullPath: '/vouchers/$voucherId/redeem'
+      preLoaderRoute: typeof mainVouchersVoucherIdRedeemRouteImport
+      parentRoute: typeof mainRouteRoute
+    }
   }
 }
 
 interface mainRouteRouteChildren {
   mainIndexRoute: typeof mainIndexRoute
+  mainVouchersVoucherIdRedeemRoute: typeof mainVouchersVoucherIdRedeemRoute
+  mainVouchersVoucherIdIndexRoute: typeof mainVouchersVoucherIdIndexRoute
 }
 
 const mainRouteRouteChildren: mainRouteRouteChildren = {
   mainIndexRoute: mainIndexRoute,
+  mainVouchersVoucherIdRedeemRoute: mainVouchersVoucherIdRedeemRoute,
+  mainVouchersVoucherIdIndexRoute: mainVouchersVoucherIdIndexRoute,
 }
 
 const mainRouteRouteWithChildren = mainRouteRoute._addFileChildren(
