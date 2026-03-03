@@ -21,6 +21,7 @@ interface VoucherCardProps {
   onAction?: () => void;
   isCollapsed?: boolean;
   isAbove?: boolean;
+  isStacked: boolean;
 }
 
 export const VoucherCard = ({
@@ -31,6 +32,7 @@ export const VoucherCard = ({
   onAction,
   isCollapsed = false,
   isAbove = false,
+  isStacked,
 }: VoucherCardProps) => {
   const { t } = useTranslation();
 
@@ -48,31 +50,24 @@ export const VoucherCard = ({
   return (
     <div
       className={cn(
-        "relative flex flex-col rounded-3xl overflow-hidden transition-all duration-500 ease-in-out",
+        "relative flex flex-col rounded-3xl overflow-hidden transition-all duration-400 ease-in-out",
         "backdrop-blur-xl border-2 text-white",
-        !isCollapsed ? "shadow-2xl" : "shadow-md",
-
         className,
       )}
       style={{ ...cardStyle, height: "100%" }}
     >
-      {/* Background gloss highlight - transitions between top-edge glass and full-card depth */}
-      {/* <div
+      <div
         className={cn(
-          "absolute inset-0 pointer-events-none transition-opacity duration-500",
-          isCollapsed
-            ? "bg-linear-to-b from-white/10 via-transparent to-transparent"
-            : "bg-linear-to-b from-white/12 via-transparent to-black/10",
+          "absolute inset-0 pointer-events-none transition-opacity duration-400 bg-linear-to-b from-white/12 via-transparent to-black/10",
         )}
-      /> */}
+      />
 
       <div
         className={cn(
-          "w-full flex justify-between px-5 transition-all duration-500 ease-in-out",
-          isCollapsed
+          "w-full flex justify-between px-5 transition-all duration-400 py-3",
+          isCollapsed && isStacked
             ? "opacity-100 h-full"
-            : "opacity-0 pointer-events-none absolute inset-0",
-          isAbove ? "pt-3 pb-0" : "pt-0 pb-3",
+            : "opacity-0 pointer-events-none absolute inset-0 ",
           isCollapsed && (isAbove ? "items-start" : "items-end"),
         )}
       >
@@ -89,10 +84,10 @@ export const VoucherCard = ({
 
       <div
         className={cn(
-          "flex flex-col p-5 gap-3 flex-1 relative transition-all duration-500 ease-in-out",
+          "flex flex-col p-5 gap-3 flex-1 relative transition-all duration-400",
           !isCollapsed
             ? "opacity-100 translate-y-0 scale-100"
-            : "opacity-0 translate-y-4 scale-95 pointer-events-none absolute inset-0",
+            : "opacity-0 translate-y-4  pointer-events-none absolute inset-0",
         )}
       >
         <div className="flex flex-col gap-1">

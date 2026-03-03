@@ -5,7 +5,6 @@ import {
   VOUCHER_STATUS,
   type VoucherStatus,
 } from "../components/VoucherCard.tsx";
-import { getCardColors } from "../utils/cardColors.utils.ts";
 import { cn } from "../utils/cn.utils.ts";
 import { useNavigate } from "@tanstack/react-router";
 import { useVouchersPage } from "../hooks/useVouchersPage.ts";
@@ -21,6 +20,7 @@ const TABS: VoucherStatus[] = [
 const COLLAPSED_H = 100;
 const OVERLAP = 40;
 const DECK_OFFSET = 20;
+const STACKED_H = 55;
 
 export function VouchersPage() {
   const { t } = useTranslation();
@@ -34,10 +34,9 @@ export function VouchersPage() {
       ? Math.min(expandedIdxState, Math.max(0, vouchers.length - 1))
       : Math.max(0, vouchers.length - 1);
 
-  // Whether the stack is "open" (active accordion) or "closed" (deck view)
   const [stackActive, setStackActive] = useState(false);
 
-  const [expandedCardHeight, setExpandedCardHeight] = useState(280);
+  const [expandedCardHeight, setExpandedCardHeight] = useState(220);
   const expandedCardRef = useRef<HTMLDivElement>(null);
 
   const { history } = useVoucherHistory();
@@ -54,7 +53,6 @@ export function VouchersPage() {
     return () => ro.disconnect();
   }, [expandedIndex, vouchers]);
 
-  // Reset to bottom (last) card + close stack when tab changes
   const onTabChange = (tab: VoucherStatus) => {
     setExpandedIdxState(null);
     setStackActive(false);
@@ -90,39 +88,28 @@ export function VouchersPage() {
       </div>
 
       <div className="flex-1 py-4 flex flex-col gap-4">
-        {/* ─── Loading ─── */}
         {isLoading ? (
-          <div className="px-4 relative" style={{ height: 360 }}>
-            {/* Skeleton collapsed strips */}
-            {[0, 1].map((i) => (
-              <div
-                key={i}
-                className="absolute left-0 right-0 rounded-2xl animate-pulse bg-gray-200 border border-gray-300"
-                style={{
-                  top: i * (COLLAPSED_H - OVERLAP),
-                  height: COLLAPSED_H,
-                  zIndex: 2 - i,
-                }}
-              />
-            ))}
-            {/* Skeleton expanded card (last) */}
-            <div
-              className="absolute left-0 right-0 rounded-2xl animate-pulse bg-linear-to-br from-[#1a3a4a] to-[#0d2633] border border-[#2a5a6a]/30"
-              style={{
-                top: 2 * (COLLAPSED_H - OVERLAP),
-                zIndex: 0,
-                height: 240,
-              }}
-            >
-              <div className="p-5 flex flex-col gap-3">
-                <div className="flex justify-between">
-                  <div className="h-10 w-40 bg-white/10 rounded" />
-                  <div className="h-4 w-20 bg-white/10 rounded" />
-                </div>
-                <div className="h-12 w-32 bg-white/20 rounded" />
-                <div className="h-4 w-28 bg-white/10 rounded" />
-              </div>
-            </div>
+          <div
+            className="w-[90%] mx-auto relative"
+            style={{ height: expandedCardHeight + 2 * DECK_OFFSET }}
+          >
+            {[0, 1, 2].map((i) => {
+              const depthFromFront = 2 - i;
+              return (
+                <div
+                  key={i}
+                  className="absolute left-0 right-0 rounded-3xl animate-pulse bg-slate-200 border border-slate-300 shadow-sm"
+                  style={{
+                    top: i * DECK_OFFSET,
+                    height: expandedCardHeight,
+                    zIndex: i + 1,
+                    transform: `scale(${1 - depthFromFront * 0.04})`,
+                    transformOrigin: "bottom center",
+                    opacity: 1 - depthFromFront * 0.18,
+                  }}
+                />
+              );
+            })}
           </div>
         ) : isError ? (
           <div className="flex flex-col items-center justify-center py-16 gap-4 px-4">
@@ -144,103 +131,68 @@ export function VouchersPage() {
           </div>
         ) : (
           <div className="flex-1 flex flex-col gap-4">
-            {/* ── INACTIVE: deck view ── */}
-            {!stackActive && (
-              <div
-                className="w-[90%] mx-auto relative cursor-pointer"
-                style={{ height: expandedCardHeight + (n - 1) * DECK_OFFSET }}
-                onClick={() => openStack()}
-              >
-                {/* Ghost cards: stacked behind the main card, peeking from top */}
-                {vouchers.slice(0, n - 1).map((_v: any, i: number) => {
-                  const depthFromFront = n - 1 - i;
-                  const colors = getCardColors(i);
-                  return (
+            <div
+              className="w-[90%] mx-auto h-full flex flex-col"
+              onClick={() => {
+                if (stackActive) return;
+                openStack();
+              }}
+            >
+              {vouchers.map((v: any, i: number) => {
+                const isExpanded = i === expandedIndex;
+                const marginTop = i > 0 ? -OVERLAP : 0;
+                const zIndex = n - Math.abs(i - expandedIndex);
+                const scale = 1 - Math.abs(i - expandedIndex) * 0.04;
+                return (
+                  <div
+                    key={v.id}
+                    className={cn(
+                      "relative transition-all duration-300 ease-in-out",
+                      !isExpanded && "overflow-hidden cursor-pointer",
+                    )}
+                    style={{
+                      marginTop,
+                      zIndex,
+                      height: !isExpanded
+                        ? !stackActive
+                          ? STACKED_H
+                          : COLLAPSED_H
+                        : "auto",
+                      scale: !stackActive ? scale : 1,
+                    }}
+                    onClick={
+                      stackActive && !isExpanded
+                        ? () => setExpandedIdxState(i)
+                        : undefined
+                    }
+                    aria-label={!isExpanded ? v.name : undefined}
+                  >
                     <div
-                      key={i}
-                      className="absolute left-0 right-0 rounded-3xl backdrop-blur-xl border"
-                      style={{
-                        top: i * DECK_OFFSET,
-                        height: expandedCardHeight,
-                        zIndex: i + 1,
-                        background: `linear-gradient(135deg, ${colors.gradFrom}, ${colors.gradVia}, ${colors.gradTo})`,
-                        borderColor: colors.border,
-                        transform: `scale(${1 - depthFromFront * 0.04})`,
-                        transformOrigin: "bottom center",
-                        opacity: 1 - depthFromFront * 0.18,
-                      }}
-                    />
-                  );
-                })}
-
-                {/* Front card (last index) — full content, at the bottom of the deck stack */}
-                <div
-                  ref={expandedCardRef}
-                  className="absolute left-0 right-0"
-                  style={{ top: (n - 1) * DECK_OFFSET, zIndex: n }}
-                >
-                  <VoucherCard
-                    balance={vouchers[n - 1]}
-                    status={activeTab}
-                    colorIndex={n - 1}
-                    onAction={() => openStack(n - 1)}
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* ── ACTIVE: accordion view ── */}
-            {stackActive && (
-              <div className="w-[90%] mx-auto h-full flex flex-col">
-                {vouchers.map((v: any, i: number) => {
-                  const isExpanded = i === expandedIndex;
-                  // Use negative margin for all but the first card to create overlap
-                  const marginTop = i > 0 ? -OVERLAP : 0;
-                  const zIndex = n - Math.abs(i - expandedIndex);
-
-                  return (
-                    <div
-                      key={v.id}
-                      className={cn(
-                        "relative transition-all duration-300 ease-in-out",
-                        !isExpanded && "overflow-hidden cursor-pointer",
-                      )}
-                      style={{
-                        marginTop,
-                        zIndex,
-                        height: !isExpanded ? COLLAPSED_H : "auto",
-                      }}
-                      onClick={
-                        !isExpanded ? () => setExpandedIdxState(i) : undefined
-                      }
-                      aria-label={!isExpanded ? v.name : undefined}
+                      className="w-full h-full"
+                      ref={isExpanded ? expandedCardRef : undefined}
                     >
-                      <div
-                        className="w-full h-full"
-                        ref={isExpanded ? expandedCardRef : undefined}
-                      >
-                        <VoucherCard
-                          balance={v}
-                          status={activeTab}
-                          colorIndex={i}
-                          isCollapsed={!isExpanded}
-                          isAbove={i < expandedIndex}
-                          onAction={
-                            isExpanded
-                              ? () =>
-                                  navigate({
-                                    to: "/vouchers/$voucherId",
-                                    params: { voucherId: v.id },
-                                  })
-                              : undefined
-                          }
-                        />
-                      </div>
+                      <VoucherCard
+                        balance={v}
+                        status={activeTab}
+                        colorIndex={i}
+                        isCollapsed={!isExpanded}
+                        isStacked={stackActive}
+                        isAbove={i < expandedIndex}
+                        onAction={
+                          isExpanded
+                            ? () =>
+                                navigate({
+                                  to: "/vouchers/$voucherId",
+                                  params: { voucherId: v.id },
+                                })
+                            : undefined
+                        }
+                      />
                     </div>
-                  );
-                })}
-              </div>
-            )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
 
