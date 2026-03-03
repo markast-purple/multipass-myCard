@@ -1,10 +1,11 @@
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   VoucherCard,
   VOUCHER_STATUS,
   type VoucherStatus,
 } from "../components/VoucherCard.tsx";
+import { getCardColors } from "../utils/cardColors.utils.ts";
 import { cn } from "../utils/cn.utils.ts";
 import { useNavigate } from "@tanstack/react-router";
 import { useVouchersPage } from "../hooks/useVouchersPage.ts";
@@ -17,35 +18,64 @@ const TABS: VoucherStatus[] = [
   VOUCHER_STATUS.EXPIRED,
 ];
 
+const COLLAPSED_H = 100;
+const OVERLAP = 40;
+const DECK_OFFSET = 20;
+
 export function VouchersPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const {
-    vouchers,
-    activeTab,
-    activeIndex,
-    isLoading,
-    isError,
-    refetch,
-    scrollRef,
-    isRtl,
-    handleScroll,
-    handleTabChange,
-    scrollToCard,
-  } = useVouchersPage();
+  const { vouchers, activeTab, isLoading, isError, refetch, handleTabChange } =
+    useVouchersPage();
+
+  const [expandedIdxState, setExpandedIdxState] = useState<number | null>(null);
+  const expandedIndex =
+    expandedIdxState !== null
+      ? Math.min(expandedIdxState, Math.max(0, vouchers.length - 1))
+      : Math.max(0, vouchers.length - 1);
+
+  // Whether the stack is "open" (active accordion) or "closed" (deck view)
+  const [stackActive, setStackActive] = useState(false);
+
+  const [expandedCardHeight, setExpandedCardHeight] = useState(280);
+  const expandedCardRef = useRef<HTMLDivElement>(null);
 
   const { history } = useVoucherHistory();
   const [showAllHistory, setShowAllHistory] = useState(false);
   const displayedHistory = showAllHistory ? history : history.slice(0, 4);
 
+  useEffect(() => {
+    const el = expandedCardRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([entry]) => {
+      setExpandedCardHeight(entry.contentRect.height);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [expandedIndex, vouchers]);
+
+  // Reset to bottom (last) card + close stack when tab changes
+  const onTabChange = (tab: VoucherStatus) => {
+    setExpandedIdxState(null);
+    setStackActive(false);
+    handleTabChange(tab);
+  };
+
+  const openStack = (expandIdx?: number) => {
+    setStackActive(true);
+    if (expandIdx !== undefined) setExpandedIdxState(expandIdx);
+  };
+
+  const n = vouchers.length;
+
   return (
-    <div className="flex flex-col min-h-full bg-white">
-      <div className="bg-white z-40 px-4 pt-4 pb-2">
-        <div className="flex gap-1 p-1 bg-gray-100 rounded-xl">
+    <div className="flex flex-col min-h-full">
+      <div className="z-40 px-4 pt-4 pb-2">
+        <div className="flex gap-1 p-1 bg-gray-100 rounded-xl border border-white/10">
           {TABS.map((tab) => (
             <button
               key={tab}
-              onClick={() => handleTabChange(tab)}
+              onClick={() => onTabChange(tab)}
               className={cn(
                 "flex-1 px-3 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200",
                 activeTab === tab
@@ -60,31 +90,39 @@ export function VouchersPage() {
       </div>
 
       <div className="flex-1 py-4 flex flex-col gap-4">
+        {/* ─── Loading ─── */}
         {isLoading ? (
-          <div className="flex items-center gap-4 px-4 overflow-hidden min-h-[300px]">
-            {[1, 2].map((i) => (
+          <div className="px-4 relative" style={{ height: 360 }}>
+            {/* Skeleton collapsed strips */}
+            {[0, 1].map((i) => (
               <div
                 key={i}
-                className="rounded-2xl overflow-hidden border border-[#2a5a6a]/30 animate-pulse shrink-0 bg-linear-to-br from-[#1a3a4a] to-[#0d2633]"
-                style={{ width: "85%" }}
-              >
-                <div className="p-5 flex flex-col gap-3">
-                  <div className="flex justify-between">
-                    <div className="h-10 w-40 bg-white/10 rounded" />
-                    <div className="h-4 w-20 bg-white/10 rounded" />
-                  </div>
-                  <div className="flex justify-start py-4">
-                    <div className="h-12 w-32 bg-white/20 rounded" />
-                  </div>
-                  <div className="flex">
-                    <div className="h-4 w-28 bg-white/10 rounded" />
-                  </div>
-                </div>
-                <div className="h-12 bg-white/5 border-t flex items-center justify-center border-white/10">
-                  <div className="h-4 w-28 bg-white/10 rounded" />
-                </div>
-              </div>
+                className="absolute left-0 right-0 rounded-2xl animate-pulse bg-gray-200 border border-gray-300"
+                style={{
+                  top: i * (COLLAPSED_H - OVERLAP),
+                  height: COLLAPSED_H,
+                  zIndex: 2 - i,
+                }}
+              />
             ))}
+            {/* Skeleton expanded card (last) */}
+            <div
+              className="absolute left-0 right-0 rounded-2xl animate-pulse bg-linear-to-br from-[#1a3a4a] to-[#0d2633] border border-[#2a5a6a]/30"
+              style={{
+                top: 2 * (COLLAPSED_H - OVERLAP),
+                zIndex: 0,
+                height: 240,
+              }}
+            >
+              <div className="p-5 flex flex-col gap-3">
+                <div className="flex justify-between">
+                  <div className="h-10 w-40 bg-white/10 rounded" />
+                  <div className="h-4 w-20 bg-white/10 rounded" />
+                </div>
+                <div className="h-12 w-32 bg-white/20 rounded" />
+                <div className="h-4 w-28 bg-white/10 rounded" />
+              </div>
+            </div>
           </div>
         ) : isError ? (
           <div className="flex flex-col items-center justify-center py-16 gap-4 px-4">
@@ -105,72 +143,116 @@ export function VouchersPage() {
             </p>
           </div>
         ) : (
-          <div className="flex flex-col gap-3">
-            <div
-              ref={scrollRef}
-              onScroll={handleScroll}
-              dir={isRtl ? "rtl" : "ltr"}
-              className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth px-4 items-center min-h-[300px]"
-              style={{
-                scrollbarWidth: "none",
-                msOverflowStyle: "none",
-                WebkitOverflowScrolling: "touch",
-              }}
-            >
-              {vouchers.map((balance: any, index: number) => (
+          <div className="flex-1 flex flex-col gap-4">
+            {/* ── INACTIVE: deck view ── */}
+            {!stackActive && (
+              <div
+                className="w-[90%] mx-auto relative cursor-pointer"
+                style={{ height: expandedCardHeight + (n - 1) * DECK_OFFSET }}
+                onClick={() => openStack()}
+              >
+                {/* Ghost cards: stacked behind the main card, peeking from top */}
+                {vouchers.slice(0, n - 1).map((_v: any, i: number) => {
+                  const depthFromFront = n - 1 - i;
+                  const colors = getCardColors(i);
+                  return (
+                    <div
+                      key={i}
+                      className="absolute left-0 right-0 rounded-3xl backdrop-blur-xl border"
+                      style={{
+                        top: i * DECK_OFFSET,
+                        height: expandedCardHeight,
+                        zIndex: i + 1,
+                        background: `linear-gradient(135deg, ${colors.gradFrom}, ${colors.gradVia}, ${colors.gradTo})`,
+                        borderColor: colors.border,
+                        transform: `scale(${1 - depthFromFront * 0.04})`,
+                        transformOrigin: "bottom center",
+                        opacity: 1 - depthFromFront * 0.18,
+                      }}
+                    />
+                  );
+                })}
+
+                {/* Front card (last index) — full content, at the bottom of the deck stack */}
                 <div
-                  key={balance.id}
-                  className="shrink-0 snap-center flex items-center transition-all duration-300 h-full py-4"
-                  style={{ width: vouchers.length === 1 ? "100%" : "85%" }}
+                  ref={expandedCardRef}
+                  className="absolute left-0 right-0"
+                  style={{ top: (n - 1) * DECK_OFFSET, zIndex: n }}
                 >
                   <VoucherCard
-                    balance={balance}
+                    balance={vouchers[n - 1]}
                     status={activeTab}
-                    className="flex-1"
-                    isFocused={index === activeIndex}
-                    onAction={() =>
-                      navigate({
-                        to: "/vouchers/$voucherId",
-                        params: { voucherId: balance.id },
-                      })
-                    }
+                    colorIndex={n - 1}
+                    onAction={() => openStack(n - 1)}
                   />
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
 
-            {vouchers.length > 1 && (
-              <div className="flex items-center justify-center gap-2">
-                {vouchers.map((_: any, index: number) => (
-                  <button
-                    key={index}
-                    onClick={() => scrollToCard(index)}
-                    className={cn(
-                      "w-2 h-2 rounded-sm transition-all duration-300 cursor-pointer",
-                      index === activeIndex
-                        ? "bg-primary scale-110"
-                        : "bg-gray-300",
-                    )}
-                  />
-                ))}
+            {/* ── ACTIVE: accordion view ── */}
+            {stackActive && (
+              <div className="w-[90%] mx-auto h-full flex flex-col">
+                {vouchers.map((v: any, i: number) => {
+                  const isExpanded = i === expandedIndex;
+                  // Use negative margin for all but the first card to create overlap
+                  const marginTop = i > 0 ? -OVERLAP : 0;
+                  const zIndex = n - Math.abs(i - expandedIndex);
+
+                  return (
+                    <div
+                      key={v.id}
+                      className={cn(
+                        "relative transition-all duration-300 ease-in-out",
+                        !isExpanded && "overflow-hidden cursor-pointer",
+                      )}
+                      style={{
+                        marginTop,
+                        zIndex,
+                        height: !isExpanded ? COLLAPSED_H : "auto",
+                      }}
+                      onClick={
+                        !isExpanded ? () => setExpandedIdxState(i) : undefined
+                      }
+                      aria-label={!isExpanded ? v.name : undefined}
+                    >
+                      <div
+                        className="w-full h-full"
+                        ref={isExpanded ? expandedCardRef : undefined}
+                      >
+                        <VoucherCard
+                          balance={v}
+                          status={activeTab}
+                          colorIndex={i}
+                          isCollapsed={!isExpanded}
+                          isAbove={i < expandedIndex}
+                          onAction={
+                            isExpanded
+                              ? () =>
+                                  navigate({
+                                    to: "/vouchers/$voucherId",
+                                    params: { voucherId: v.id },
+                                  })
+                              : undefined
+                          }
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
         )}
 
-        <div className="mt-4 px-4 pb-8 flex flex-col gap-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="p-2 bg-primary/10 rounded-lg">
-                <HistoryIcon
-                  className="h-5 w-5 text-primary"
-                  strokeWidth={2.5}
-                />
-              </div>
-              <h3 className="font-bold text-slate-900">
-                {t("vouchers.redemptionHistory")}
-              </h3>
+        {/* ─── Redemption history ─── */}
+        <div className="mt-4 px-4 pb-8 flex flex-col gap-4 bg-white rounded-t-3xl pt-6">
+          <div className="flex items-center gap-2">
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <HistoryIcon className="h-5 w-5 text-primary" strokeWidth={2.5} />
             </div>
+            <h3 className="font-bold text-slate-900">
+              {t("vouchers.redemptionHistory")}
+            </h3>
           </div>
 
           <div className="flex flex-col">
@@ -192,7 +274,7 @@ export function VouchersPage() {
                   )}
                   <div
                     className={cn(
-                      "flex gap-4 py-4 transition-all -mx-4 px-4",
+                      "flex gap-4 py-4 -mx-4 px-4",
                       index !== displayedHistory.length - 1 &&
                         !(
                           index < displayedHistory.length - 1 &&
@@ -202,10 +284,9 @@ export function VouchersPage() {
                         "border-b border-slate-100",
                     )}
                   >
-                    <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center shrink-0 self-stretch">
+                    <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center shrink-0">
                       <Receipt className="h-5 w-5 text-slate-500" />
                     </div>
-
                     <div className="flex-1 flex flex-col gap-0.5">
                       <div className="flex justify-between items-start">
                         <span className="font-bold text-slate-900 leading-tight">
@@ -264,7 +345,6 @@ export function VouchersPage() {
                 <span>{t("vouchers.showMore")}</span>
               </button>
             )}
-
             {showAllHistory && (
               <button
                 onClick={() => setShowAllHistory(false)}

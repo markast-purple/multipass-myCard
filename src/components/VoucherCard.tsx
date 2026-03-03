@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { ChevronRight } from "lucide-react";
 import { cn } from "../utils/cn.utils.ts";
+import { getCardColors } from "../utils/cardColors.utils.ts";
 import type { BalanceItem } from "../types/balance.dto.ts";
 
 export const VOUCHER_STATUS = {
@@ -15,17 +16,21 @@ export type VoucherStatus =
 interface VoucherCardProps {
   balance: BalanceItem;
   status: VoucherStatus;
+  colorIndex?: number;
   className?: string;
   onAction?: () => void;
-  isFocused?: boolean;
+  isCollapsed?: boolean;
+  isAbove?: boolean;
 }
 
 export const VoucherCard = ({
   balance,
   status,
+  colorIndex = 0,
   className,
   onAction,
-  isFocused = true,
+  isCollapsed = false,
+  isAbove = false,
 }: VoucherCardProps) => {
   const { t } = useTranslation();
 
@@ -33,116 +38,108 @@ export const VoucherCard = ({
   const total = balance.allocation;
 
   const isActive = status === VOUCHER_STATUS.ACTIVE;
+  const colors = getCardColors(colorIndex);
 
-  const handleCardClick = () => {
-    if (!isActive) {
-      onAction?.();
-    }
+  const cardStyle = {
+    background: `linear-gradient(135deg, ${colors.gradFrom}, ${colors.gradVia}, ${colors.gradTo})`,
+    borderColor: colors.border,
   };
 
   return (
     <div
-      onClick={handleCardClick}
       className={cn(
-        "relative flex flex-col rounded-2xl overflow-hidden shadow-lg border transition-all duration-300 h-full",
-        isActive
-          ? "bg-linear-to-br from-[#1a3a4a] to-[#0d2633] border-[#2a5a6a]/30 text-white"
-          : "bg-linear-to-br from-gray-100 to-gray-50 border-gray-200 text-gray-800",
-        !isFocused ? "pointer-events-none" : !isActive ? "cursor-pointer" : "",
-        !isFocused && "scale-90 opacity-70 blur-[2px]",
+        "relative flex flex-col rounded-3xl overflow-hidden transition-all duration-500 ease-in-out",
+        "backdrop-blur-xl border-2 text-white",
+        !isCollapsed ? "shadow-2xl" : "shadow-md",
+
         className,
       )}
+      style={{ ...cardStyle, height: "100%" }}
     >
-      <div className="flex flex-col p-5 gap-3 flex-1 relative">
+      {/* Background gloss highlight - transitions between top-edge glass and full-card depth */}
+      {/* <div
+        className={cn(
+          "absolute inset-0 pointer-events-none transition-opacity duration-500",
+          isCollapsed
+            ? "bg-linear-to-b from-white/10 via-transparent to-transparent"
+            : "bg-linear-to-b from-white/12 via-transparent to-black/10",
+        )}
+      /> */}
+
+      <div
+        className={cn(
+          "w-full flex justify-between px-5 transition-all duration-500 ease-in-out",
+          isCollapsed
+            ? "opacity-100 h-full"
+            : "opacity-0 pointer-events-none absolute inset-0",
+          isAbove ? "pt-3 pb-0" : "pt-0 pb-3",
+          isCollapsed && (isAbove ? "items-start" : "items-end"),
+        )}
+      >
+        <span className="relative text-sm font-bold text-white/90 truncate max-w-[60%] leading-tight">
+          {balance.name}
+        </span>
+        <div className="relative flex items-baseline gap-1 shrink-0">
+          <span className="text-2xl font-bold tabular-nums text-white">
+            {balance.allocation.toLocaleString()}
+          </span>
+          <span className="text-base font-medium text-white/70">₪</span>
+        </div>
+      </div>
+
+      <div
+        className={cn(
+          "flex flex-col p-5 gap-3 flex-1 relative transition-all duration-500 ease-in-out",
+          !isCollapsed
+            ? "opacity-100 translate-y-0 scale-100"
+            : "opacity-0 translate-y-4 scale-95 pointer-events-none absolute inset-0",
+        )}
+      >
         <div className="flex flex-col gap-1">
           <div className="flex gap-4 items-start justify-between">
-            <span
-              className={cn(
-                "text-sm font-bold leading-tight",
-                isActive ? "text-white" : "text-gray-900",
-              )}
-            >
+            <span className="text-sm font-bold leading-tight text-white/90">
               {balance.provider ||
                 balance.companies?.[0] ||
                 t("vouchers.card.provider")}
             </span>
-            <span
-              className={cn(
-                "text-sm uppercase shrink-0 tracking-wider tabular-nums",
-                isActive ? "text-white/40" : "text-gray-400",
-              )}
-            >
+            <span className="text-xs uppercase shrink-0 tracking-wider tabular-nums px-2 py-0.5 rounded-full bg-white/10 text-white/50">
               {t("vouchers.card.validUntil")} {balance.validUntil || "MM/YY"}
             </span>
           </div>
-          <h3
-            className={cn(
-              "text-lg font-medium leading-snug line-clamp-2",
-              isActive ? "text-white/90" : "text-gray-700",
-            )}
-          >
+          <h3 className="text-lg font-semibold leading-snug line-clamp-2 text-white/75">
             {balance.name}
           </h3>
         </div>
 
-        <div className="flex items-center py-2">
+        <div className="flex items-center py-1">
           <div className="flex items-baseline gap-1.5">
-            <span
-              className={cn(
-                "text-6xl font-bold tracking-tighter tabular-nums",
-                isActive ? "text-white" : "text-gray-800",
-              )}
-            >
+            <span className="text-6xl font-bold tracking-tighter tabular-nums drop-shadow-sm text-white">
               {balance.allocation.toLocaleString()}
             </span>
-            <span
-              className={cn(
-                "text-2xl font-medium",
-                isActive ? "text-white/80" : "text-gray-600",
-              )}
-            >
-              ₪
-            </span>
+            <span className="text-2xl font-medium text-white/70">₪</span>
           </div>
         </div>
 
         <div className="mt-auto flex flex-col gap-2">
-          <div className="flex items-center justify-between">
-            <span
-              className={cn(
-                "text-xs px-3 py-1 rounded-full font-semibold",
-                isActive
-                  ? "bg-white/10 text-white/90"
-                  : status === VOUCHER_STATUS.REDEEMED
-                    ? "bg-emerald-100 text-emerald-700"
-                    : "bg-gray-200 text-gray-500",
-              )}
-            >
+          <div className="flex items-end justify-between">
+            <span className="text-xs px-3 py-1.5 rounded-full font-semibold backdrop-blur-sm bg-white/15 text-white/90 border border-white/20">
               {t("vouchers.card.remaining", { remaining, total })}
             </span>
+            {isActive && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onAction?.();
+                }}
+                className="flex items-center rounded-2xl justify-center gap-1.5 py-2.5 text-sm font-bold transition-all cursor-pointer px-4 backdrop-blur-sm border bg-white/15 hover:bg-white/25 text-white border-white/25 active:scale-95"
+              >
+                <span>{t("vouchers.card.detailsCta")}</span>
+                <ChevronRight className="h-5 w-5 rtl:rotate-180" />
+              </button>
+            )}
           </div>
         </div>
       </div>
-
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          onAction?.();
-        }}
-        className={cn(
-          "flex items-center justify-center gap-2 py-3.5 text-base font-bold transition-colors cursor-pointer w-full",
-          isActive
-            ? "bg-white/10 hover:bg-white/15 text-white border-t border-white/10"
-            : "bg-gray-50 hover:bg-gray-100 text-gray-600 border-t border-gray-200",
-        )}
-      >
-        <span>
-          {isActive
-            ? t("vouchers.card.redeemCta")
-            : t("vouchers.card.detailsCta")}
-        </span>
-        <ChevronRight className="h-5 w-5 rtl:rotate-180" />
-      </button>
     </div>
   );
 };
