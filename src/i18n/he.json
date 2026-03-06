@@ -11,11 +11,14 @@
             "validUntil": "תוקף",
             "amount": "שח",
             "amountLabel": "סכום נטען",
-            "remainingLabel": "יתרת ניצול",
+            "remainingLabel": "יתרת למימוש",
             "usage": "מומשו {{used}} מתוך {{total}}",
             "remaining": "נותרו {{remaining}} מתוך {{total}}",
-            "redeemCta": "להצגה ומימוש לחץ כאן",
-            "detailsCta": "לפרטים"
+            "redeemCta": "הצג קוד מימוש",
+            "detailsCta": "פתיחת תו",
+            "partiallyUsed": "מומש חלקית",
+            "fullyUsed": "מומש במלואו",
+            "expired": "פג תוקף"
         },
         "empty": {
             "active": "אין תווים פעילים",
@@ -40,7 +43,9 @@
             "title": "פרטי תו",
             "notFound": "התו לא נמצא",
             "backToList": "חזרה לרשימה",
-            "description": "תיאור"
+            "description": "תיאור",
+            "usageHint": "יש לפתוח בקופה רגע לפני התשלום",
+            "supportingHint": "הצג לקופאי / השתמש בסיכום ההזמנה"
         },
         "redeem": {
             "title": "מימוש תו",
@@ -49,6 +54,10 @@
             "pollingTimeout": "זמן ההמתנה הסתיים",
             "tryAgain": "נסה שנית",
             "backToDetails": "חזרה לפרטי התו",
+            "presentToCashier": "הצג לקופאי למימוש",
+            "redeemCode": "קוד מימוש",
+            "doNotShare": "אין לשתף קוד זה",
+            "share": "שתף",
             "success": "מימוש בוצע בהצלחה!",
             "successDesc": "התו מומש בהצלחה בבית העסק.",
             "viewRedeemed": "צפה בתווים שמומשו",
@@ -57,6 +66,7 @@
     },
     "common": {
         "back": "חזרה",
-        "copied": "הועתק"
+        "copied": "הועתק",
+        "copy": "העתק"
     }
 }

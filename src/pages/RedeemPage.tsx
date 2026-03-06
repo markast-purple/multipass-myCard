@@ -3,8 +3,9 @@ import { QRCodeSVG } from "qrcode.react";
 import { VOUCHER_STATUS } from "../components/VoucherCard.tsx";
 import { useParams, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect, useRef } from "react";
-import { CheckCircle2, Copy, Share2 } from "lucide-react";
+import { CheckCircle2, Copy, Share2, Info, AlertTriangle } from "lucide-react";
 import { useBalances } from "../hooks/useBalances.ts";
+import { Typography } from "../components/ui/Typography.tsx";
 
 export function RedeemPage() {
   const { t } = useTranslation();
@@ -23,6 +24,7 @@ export function RedeemPage() {
   const timeoutRef = useRef<number | null>(null);
 
   const voucher = balancesData?.balances?.find((b: any) => b.id === voucherId);
+  // In a real app, this would be a single-use token or state-dependent code
   const numericCode = "8429 1035 7621";
 
   useEffect(() => {
@@ -71,83 +73,124 @@ export function RedeemPage() {
   if (!voucher) return null;
 
   return (
-    <div className="flex flex-col min-h-full bg-slate-50/50">
+    <div className="flex flex-col min-h-screen bg-white">
       {!success ? (
-        <div className="flex flex-col flex-1 px-4 py-6 gap-6">
-          <div className="flex flex-col items-center text-center gap-1.5">
-            <span className="text-xs font-bold text-primary tracking-widest uppercase">
-              {voucher.provider}
-            </span>
-            <h1 className="text-2xl font-black text-slate-900">
+        <div className="flex flex-col flex-1 px-6 py-4 gap-4 max-w-md mx-auto w-full">
+          {/* Moment-of-truth Header */}
+          <div className="flex flex-col items-center text-center gap-2">
+            <Typography
+              variant="h1"
+              className="text-3xl font-black text-slate-900 mt-2"
+            >
+              {t("vouchers.redeem.presentToCashier")}
+            </Typography>
+            <Typography variant="body" className="text-slate-500 font-medium">
               {voucher.name}
-            </h1>
+            </Typography>
           </div>
 
-          <div className="flex flex-col gap-6 bg-white p-6 rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-slate-100 relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-32 h-32 bg-emerald-50/50 -ml-16 -mt-16 rounded-full" />
+          {/* Code Container - Clean Whitespace */}
+          <div className="flex flex-col gap-4 items-center py-2">
+            <div className="p-8 bg-white rounded-[3rem] shadow-2xl shadow-slate-200/60 border border-slate-100 flex items-center justify-center relative overflow-hidden group">
+              {/* Decorative background blur */}
+              <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
-            <div className="relative flex flex-col items-center gap-8">
-              <div className="group relative p-4 bg-white rounded-3xl shadow-sm border border-slate-100 transition-all hover:shadow-md">
-                <div className="w-48 h-48 bg-white rounded-2xl overflow-hidden flex items-center justify-center p-2 border border-slate-50">
-                  <QRCodeSVG
-                    value={numericCode}
-                    size={176}
-                    level="H"
-                    includeMargin={false}
-                    className="w-full h-full"
-                  />
-                </div>
+              <div className="relative p-2 bg-white rounded-2xl">
+                <QRCodeSVG
+                  value={numericCode}
+                  size={200}
+                  level="H"
+                  includeMargin={false}
+                  className="w-full h-full"
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col items-center gap-8 w-full">
+              <div className="flex flex-col items-center gap-2">
+                <Typography
+                  variant="caption"
+                  className="text-slate-400 font-bold uppercase tracking-[0.2em] text-[11px]"
+                >
+                  {t("vouchers.redeem.redeemCode")}
+                </Typography>
+                <Typography className="text-3xl font-mono font-black tracking-[0.15em] text-slate-900 tabular-nums">
+                  {numericCode}
+                </Typography>
               </div>
 
-              <div className="w-full flex flex-col gap-3">
-                <div className="w-full h-20 bg-white p-3 rounded-2xl shadow-sm border border-slate-100 flex items-center justify-center gap-px">
-                  {Array.from({ length: 80 }).map((_, i) => (
-                    <div
-                      key={i}
-                      className="h-full bg-slate-900 shrink-0 rounded-[0.5px]"
-                      style={{
-                        width: `${(Math.sin(i * 5) > 0 ? 1 : 2) + (Math.cos(i * 3) > 0 ? 0 : 1)}px`,
-                        opacity: 0.8 + Math.random() * 0.2,
-                      }}
-                    />
-                  ))}
-                </div>
-
-                <div className="flex flex-col items-center gap-4">
-                  <span className="text-2xl font-mono font-black tracking-widest text-slate-900">
-                    {numericCode}
-                  </span>
-
-                  <div className="flex gap-2">
-                    <button
-                      onClick={handleCopy}
-                      className="flex items-center gap-2 px-6 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold text-slate-700 hover:bg-slate-100 active:scale-95 transition-all"
-                    >
-                      {copied ? (
-                        <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                      ) : (
-                        <Copy className="h-4 w-4" />
-                      )}
-                      {copied
-                        ? t("common.copied")
-                        : t("vouchers.redeem.copyCode")}
-                    </button>
-                    <button className="p-3 bg-slate-50 border border-slate-200 rounded-2xl text-slate-700 hover:bg-slate-100 active:scale-95 transition-all">
-                      <Share2 className="h-5 w-5" />
-                    </button>
+              {/* Enhanced Labeled Actions */}
+              <div className="flex gap-4 w-full">
+                <button
+                  onClick={handleCopy}
+                  className="flex flex-1 items-center justify-center gap-2 p-4 bg-slate-50 border border-slate-200 rounded-4xl hover:bg-slate-100 active:scale-95 transition-all group"
+                >
+                  <div
+                    className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${copied ? "bg-emerald-500 text-white" : "bg-white border border-slate-100 text-slate-600 shadow-sm"}`}
+                  >
+                    {copied ? (
+                      <CheckCircle2 className="h-5 w-5" />
+                    ) : (
+                      <Copy className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                    )}
                   </div>
-                </div>
+                  <Typography
+                    variant="small"
+                    className={`font-bold uppercase tracking-wide ${copied ? "text-emerald-600" : "text-slate-500"}`}
+                  >
+                    {copied ? t("common.copied") : t("common.copy")}
+                  </Typography>
+                </button>
+
+                <button className="flex-1 flex items-center justify-center gap-2 p-4 bg-slate-50 border border-slate-200 rounded-4xl hover:bg-slate-100 active:scale-95 transition-all group">
+                  <div className="w-10 h-10 bg-white border border-slate-100 rounded-2xl flex items-center justify-center text-slate-600 shadow-sm">
+                    <Share2 className="h-5 w-5 group-hover:scale-110 transition-transform" />
+                  </div>
+                  <Typography
+                    variant="small"
+                    className="font-bold uppercase tracking-wide text-[11px] text-slate-500"
+                  >
+                    {t("vouchers.redeem.share")}
+                  </Typography>
+                </button>
               </div>
             </div>
           </div>
 
-          <div className="mt-auto flex flex-col gap-4">
-            <div className="fex flex-col items-center gap-3 py-4"></div>
+          {/* Safety & Info Messaging */}
+          <div className="flex flex-col gap-4">
+            <div className="flex items-start gap-4 p-5 bg-amber-50 rounded-3xl border border-amber-100">
+              <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+              <div className="flex flex-col gap-1">
+                <Typography
+                  variant="small"
+                  className="font-black text-amber-900 uppercase tracking-wide text-[11px]"
+                >
+                  {t("common.important")}
+                </Typography>
+                <Typography
+                  variant="body"
+                  className="text-amber-800 text-sm leading-snug font-medium"
+                >
+                  {t("vouchers.redeem.doNotShare")}
+                </Typography>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-center gap-2 py-2">
+              <Info className="h-4 w-4 text-slate-300" />
+              <Typography
+                variant="small"
+                className="text-slate-400 font-bold text-[12px]"
+              >
+                {t("vouchers.card.validUntil")}: {voucher.validUntil || "MM/YY"}
+              </Typography>
+            </div>
 
             {!isPolling && (
               <button
                 onClick={() => setIsPolling(true)}
-                className="w-full py-5 bg-amber-500 hover:bg-amber-600 text-white rounded-4xl font-bold text-lg shadow-lg shadow-amber-500/10 active:scale-[0.98] transition-all"
+                className="w-full py-5 bg-primary text-white rounded-4xl font-black text-lg shadow-xl shadow-primary/20 active:scale-[0.98] transition-all mt-4"
               >
                 {t("vouchers.redeem.tryAgain")}
               </button>
@@ -155,31 +198,37 @@ export function RedeemPage() {
 
             <button
               onClick={() => navigate({ to: ".." })}
-              className="w-full py-5 text-slate-400 font-bold hover:text-slate-600 transition-colors"
+              className="w-full py-4 text-slate-400 font-bold hover:text-slate-600 transition-colors uppercase tracking-widest text-xs"
             >
               {t("vouchers.redeem.backToDetails")}
             </button>
           </div>
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center flex-1 px-8 py-12 animate-in fade-in zoom-in duration-700">
+        <div className="flex flex-col items-center justify-center min-h-screen px-8 py-12 animate-in fade-in zoom-in duration-700">
           <div className="relative">
-            <div className="absolute inset-0 bg-emerald-500 blur-2xl opacity-20 animate-pulse" />
-            <div className="relative w-28 h-28 bg-linear-to-br from-emerald-400 to-emerald-600 rounded-[2.5rem] shadow-2xl shadow-emerald-500/20 flex items-center justify-center transform rotate-12">
-              <CheckCircle2 className="h-14 w-14 text-white -rotate-12" />
+            <div className="absolute inset-0 bg-emerald-500 blur-3xl opacity-20 animate-pulse" />
+            <div className="relative w-32 h-32 bg-linear-to-br from-emerald-400 to-emerald-600 rounded-[3rem] shadow-2xl shadow-emerald-500/20 flex items-center justify-center transform rotate-12 glow-emerald-500">
+              <CheckCircle2 className="h-16 w-16 text-white -rotate-12" />
             </div>
           </div>
 
-          <div className="text-center mt-10">
-            <h2 className="text-3xl font-black text-slate-900 mb-3 tracking-tight">
+          <div className="text-center mt-12 max-w-xs">
+            <Typography
+              variant="h1"
+              className="text-3xl font-black text-slate-900 mb-4 tracking-tight"
+            >
               {t("vouchers.redeem.success")}
-            </h2>
-            <p className="text-slate-500 font-medium leading-relaxed">
+            </Typography>
+            <Typography
+              variant="body"
+              className="text-slate-500 font-medium leading-relaxed"
+            >
               {t("vouchers.redeem.successDesc")}
-            </p>
+            </Typography>
           </div>
 
-          <div className="w-full flex flex-col gap-4 mt-12">
+          <div className="w-full flex flex-col gap-4 mt-16 max-w-sm">
             <button
               onClick={() =>
                 navigate({
@@ -187,13 +236,13 @@ export function RedeemPage() {
                   search: { status: VOUCHER_STATUS.REDEEMED },
                 })
               }
-              className="w-full bg-primary hover:bg-emerald-900 text-white py-5 rounded-4xl font-black text-lg shadow-xl shadow-emerald-900/10 active:scale-[0.98] transition-all"
+              className="w-full bg-primary hover:opacity-90 text-white py-5 rounded-4xl font-black text-lg shadow-2xl shadow-primary/30 active:scale-[0.98] transition-all"
             >
               {t("vouchers.redeem.viewRedeemed")}
             </button>
             <button
               onClick={() => navigate({ to: "/" })}
-              className="w-full bg-slate-100 hover:bg-slate-200 text-slate-600 py-5 rounded-4xl font-bold text-lg active:scale-[0.98] transition-all"
+              className="w-full bg-slate-50 hover:bg-slate-100 text-slate-600 py-5 rounded-4xl font-bold text-lg border border-slate-100 active:scale-[0.98] transition-all"
             >
               {t("vouchers.redeem.backToActive")}
             </button>
