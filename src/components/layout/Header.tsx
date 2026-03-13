@@ -1,4 +1,4 @@
-import { Settings, ChevronLeft } from "lucide-react";
+import { Menu, ChevronLeft } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 import multipass_logo from "../../assets/multipass_logo.png";
 import { Typography } from "../ui/Typography.tsx";
@@ -14,6 +14,7 @@ interface HeaderProps {
   onNotificationClick?: () => void;
   unreadCount?: number;
   backTarget?: string;
+  onOpenMenu?: () => void;
 }
 
 export function Header({
@@ -23,6 +24,7 @@ export function Header({
   phoneNumber,
   onBack,
   backTarget,
+  onOpenMenu,
 }: HeaderProps) {
   const navigate = useNavigate();
 
@@ -40,7 +42,7 @@ export function Header({
     <header className="bg-surface w-full">
       <Container noPadding>
         <div className="flex flex-col">
-          <div className="flex items-center justify-between p-4 h-20">
+          <div className="flex items-center justify-between px-4 py-2 h-16">
             {isHome ? (
               <img
                 src={multipass_logo}
@@ -57,13 +59,20 @@ export function Header({
             )}
 
             <div className="flex items-center gap-2">
-              {phoneNumber && (
-                <Typography variant="small" className="text-primary" dir="ltr">
-                  {`הי, ${phoneNumber}`}
+              {isHome && phoneNumber && (
+                <Typography
+                  variant="small"
+                  className="text-primary font-bold"
+                  dir="ltr"
+                >
+                  {phoneNumber}
                 </Typography>
               )}
-              <button className="p-1.5 rounded-full bg-secondary hover:bg-gray-200 transition-colors">
-                <Settings className="h-5 w-5 text-primary" strokeWidth={1.5} />
+              <button
+                onClick={onOpenMenu}
+                className="p-2 rounded-full bg-secondary hover:bg-gray-200 transition-all active:scale-90"
+              >
+                <Menu className="h-6 w-6 text-primary" strokeWidth={2} />
               </button>
             </div>
           </div>

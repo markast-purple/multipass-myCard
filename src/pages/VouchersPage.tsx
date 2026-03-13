@@ -10,6 +10,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useVouchersPage } from "../hooks/useVouchersPage.ts";
 import { useVoucherHistory } from "../hooks/useVoucherHistory.ts";
 import { Receipt, History as HistoryIcon, MapPin } from "lucide-react";
+import { useVoucherStore } from "../store/voucherStore.ts";
 import { Typography } from "../components/ui/Typography.tsx";
 import { Button } from "../components/ui/Button.tsx";
 import { Surface } from "../components/ui/Surface.tsx";
@@ -31,6 +32,9 @@ export function VouchersPage() {
   const navigate = useNavigate();
   const { vouchers, activeTab, isLoading, isError, refetch, handleTabChange } =
     useVouchersPage();
+  const setActiveColorIndex = useVoucherStore(
+    (state) => state.setActiveColorIndex,
+  );
 
   const [expandedIdxState, setExpandedIdxState] = useState<number | null>(null);
   const expandedIndex =
@@ -85,7 +89,7 @@ export function VouchersPage() {
                 "flex-1 px-3 py-2.5 rounded-lg transition-all duration-200",
                 activeTab === tab
                   ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted hover:text-secondary-foreground active:bg-gray-200",
+                  : "text-slightly-black hover:text-full-dark active:bg-gray-200",
               )}
             >
               <Typography
@@ -128,7 +132,7 @@ export function VouchersPage() {
           <div className="flex flex-col items-center justify-center py-16 gap-4 px-4">
             <Typography
               variant="body"
-              className="text-muted font-medium text-center"
+              className="text-slightly-black font-medium text-center"
             >
               {t("vouchers.error.title")}
             </Typography>
@@ -139,16 +143,16 @@ export function VouchersPage() {
         ) : vouchers.length === 0 ? (
           <div className="flex-1 flex flex-col items-center justify-center py-20 px-8 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center">
-              <Receipt className="h-10 w-10 text-slate-300" />
+              <Receipt className="h-10 w-10 text-slightly-black/40" />
             </div>
             <div className="flex flex-col gap-2 text-center">
-              <Typography
-                variant="h2"
-                className="text-secondary-foreground font-bold"
-              >
+              <Typography variant="h2" className="text-full-dark font-bold">
                 {t(`vouchers.empty.${activeTab}`)}
               </Typography>
-              <Typography variant="body" className="text-muted max-w-[240px]">
+              <Typography
+                variant="body"
+                className="text-slightly-black max-w-[240px]"
+              >
                 {t("vouchers.subtitle")}
               </Typography>
             </div>
@@ -204,11 +208,13 @@ export function VouchersPage() {
                         isAbove={i < expandedIndex}
                         onAction={
                           isExpanded
-                            ? () =>
+                            ? () => {
+                                setActiveColorIndex(i);
                                 navigate({
                                   to: "/vouchers/$voucherId",
                                   params: { voucherId: v.id },
-                                })
+                                });
+                              }
                             : undefined
                         }
                       />
@@ -226,7 +232,7 @@ export function VouchersPage() {
             <div className="p-2 bg-primary/10 rounded-xl">
               <HistoryIcon className="h-5 w-5 text-primary" strokeWidth={2.5} />
             </div>
-            <Typography variant="h2" className="text-secondary-foreground">
+            <Typography variant="h2" className="text-full-dark">
               {t("vouchers.redemptionHistory")}
             </Typography>
           </div>
@@ -245,7 +251,7 @@ export function VouchersPage() {
                     <div className="pt-4 pb-2">
                       <Typography
                         variant="caption"
-                        className="font-black text-secondary-foreground"
+                        className="font-black text-full-dark"
                       >
                         {displayDate}
                       </Typography>
@@ -264,7 +270,7 @@ export function VouchersPage() {
                     )}
                   >
                     <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center shrink-0">
-                      <Receipt className="h-5 w-5 text-slate-500" />
+                      <Receipt className="h-5 w-5 text-slightly-black/50" />
                     </div>
                     <div className="flex-1 flex flex-col gap-0.5">
                       <div className="flex justify-between items-start">
@@ -304,12 +310,12 @@ export function VouchersPage() {
                       <div className="flex items-center gap-3">
                         <Typography
                           variant="caption"
-                          className="text-muted font-medium"
+                          className="text-slightly-black font-medium"
                         >
                           {displayTime}
                         </Typography>
                         {item.location && (
-                          <div className="flex items-center gap-1 text-muted">
+                          <div className="flex items-center gap-1 text-slightly-black/60">
                             <MapPin className="h-3 w-3" />
                             <Typography
                               variant="caption"
@@ -341,7 +347,7 @@ export function VouchersPage() {
                 variant="ghost"
                 fullWidth
                 onClick={() => setShowAllHistory(false)}
-                className="mt-4 text-muted"
+                className="mt-4 text-slightly-black"
               >
                 {t("vouchers.showLess")}
               </Button>

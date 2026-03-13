@@ -62,11 +62,22 @@
             "successDesc": "התו מומש בהצלחה בבית העסק.",
             "viewRedeemed": "צפה בתווים שמומשו",
             "backToActive": "חזרה לתווים פעילים"
+        },
+        "menu": {
+            "myVouchers": "התווים שלי",
+            "redemptionHistory": "היסטוריית מימושים",
+            "notifications": "עדכונים והתראות",
+            "howToRedeem": "איך מממשים? / FAQ",
+            "support": "תמיכה / יצירת קשר",
+            "about": "אודות / תנאי שימוש",
+            "settings": "הגדרות",
+            "logout": "התנתקות"
         }
     },
     "common": {
         "back": "חזרה",
         "copied": "הועתק",
-        "copy": "העתק"
+        "copy": "העתק",
+        "important": "חשוב"
     }
 }

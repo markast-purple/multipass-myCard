@@ -4,6 +4,9 @@ export default {
   theme: {
     extend: {
       colors: {
+        "full-dark": "#000000",
+        "main-dark": "#111111",
+        "slightly-black": "#333333",
         primary: {
           DEFAULT: "var(--color-primary)",
           soft: "var(--color-primary-soft)",

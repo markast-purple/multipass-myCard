@@ -12,8 +12,8 @@ interface SurfaceProps extends HTMLAttributes<HTMLElement> {
 }
 
 const variantStyles: Record<SurfaceVariant, string> = {
-  paper: "bg-surface text-secondary-foreground",
-  muted: "bg-surface-muted text-secondary-foreground",
+  paper: "bg-surface text-main-dark",
+  muted: "bg-surface-muted text-main-dark",
   primary: "bg-primary text-primary-foreground",
   transparent: "bg-transparent",
 };

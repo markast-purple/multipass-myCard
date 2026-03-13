@@ -6,14 +6,18 @@ import { Typography } from "../components/ui/Typography.tsx";
 import { Surface } from "../components/ui/Surface.tsx";
 import { Button } from "../components/ui/Button.tsx";
 import { Container } from "../components/ui/Container.tsx";
+import { getCardColors } from "../utils/cardColors.utils.ts";
+import { useVoucherStore } from "../store/voucherStore.ts";
 
 export function VoucherDetailsPage() {
   const { t } = useTranslation();
   const { voucherId } = useParams({ from: "/(main)/vouchers/$voucherId/" });
+  const activeColorIndex = useVoucherStore((state) => state.activeColorIndex);
   const navigate = useNavigate();
   const { data: balancesData, isLoading } = useBalances();
 
   const voucher = balancesData?.balances?.find((b: any) => b.id === voucherId);
+  const colors = getCardColors(activeColorIndex);
 
   if (isLoading) {
     return (
@@ -43,34 +47,38 @@ export function VoucherDetailsPage() {
   const isActive = remaining > 0;
 
   return (
-    <div className="px-3 pt-2 shadow-2xl pb-6">
+    <div className="px-3 flex-1 pb-6">
       <Container
         className="flex flex-1 flex-col rounded-3xl gap-6 pb-6 border-slate-100 border bg-slate-50 px-3"
         noPadding
       >
-        {/* Brand-focused Header Section */}
         <div className="pt-4">
-          <Typography
-            variant="caption"
-            className="text-white/70 font-black tracking-[0.2em] text-[10px] uppercase"
-          >
-            {voucher.provider || voucher.companies?.[0]}
-          </Typography>
-          <Typography variant="h1" className="text-4xl font-black">
+          {voucher.provider ||
+            (voucher.companies && voucher.companies.length > 0 && (
+              <Typography
+                variant="caption"
+                className="text-white/70 font-black tracking-[0.2em] uppercase"
+              >
+                {voucher.provider || voucher.companies?.[0]}
+              </Typography>
+            ))}
+          <Typography variant="h1" className="text-3xl font-black">
             {voucher.name}
           </Typography>
         </div>
 
-        {/* Main Content Section */}
-        <div className="z-20 flex flex-col gap-6">
-          {/* Hero Balance Card - Primary Theme */}
+        <div className="z-20 flex flex-col gap-4">
           <Surface
-            className="p-8 flex flex-col items-center gap-3 border border-white/10 shadow-2xl overflow-hidden bg-primary text-white"
-            variant="primary"
+            className="p-8 flex flex-col items-center gap-3 border shadow-2xl overflow-hidden text-white rounded-3xl"
+            style={{
+              background: `linear-gradient(135deg, ${colors.gradFrom}, ${colors.gradVia}, ${colors.gradTo})`,
+              borderColor: colors.border,
+            }}
           >
             <Typography
               variant="caption"
-              className="text-white/80 font-bold text-[11px] uppercase tracking-wider"
+              size="medium"
+              className="text-white/80 font-bold uppercase"
             >
               {t("vouchers.card.remainingLabel")}
             </Typography>
@@ -96,6 +104,7 @@ export function VoucherDetailsPage() {
                   className="h-full bg-white rounded-full transition-all duration-700 shadow-[0_0_8px_rgba(255,255,255,0.4)]"
                   style={{
                     width: `${(remaining / voucher.allocation) * 100}%`,
+                    backgroundColor: colors.border,
                   }}
                 />
               </div>
@@ -122,17 +131,15 @@ export function VoucherDetailsPage() {
                     })
                   }
                   variant="primary"
-                  className="w-full py-5 rounded-2xl text-xl font-black shadow-xl shadow-primary/20 flex items-center justify-center gap-3 active:scale-[0.98] transition-all bg-primary text-white"
+                  className="w-full py-5 rounded-2xl text-xl font-black shadow-xl flex items-center justify-center gap-3 active:scale-[0.98] transition-all text-white border-0"
+                  style={{
+                    background: `linear-gradient(135deg, ${colors.gradFrom}, ${colors.gradVia}, ${colors.gradTo})`,
+                    boxShadow: `0 8px 15px -5px ${colors.glow}`,
+                  }}
                 >
                   <CheckCircle2 className="h-6 w-6" />
                   {t("vouchers.card.redeemCta")}
                 </Button>
-                <Typography
-                  variant="small"
-                  className="text-center font-bold text-slate-400 text-[11px] uppercase tracking-tighter"
-                >
-                  {t("vouchers.details.supportingHint")}
-                </Typography>
               </>
             ) : (
               <Button
@@ -145,23 +152,9 @@ export function VoucherDetailsPage() {
               </Button>
             )}
           </div>
-          <div className="border-t border-slate-100 flex flex-col gap-4">
-            {isActive && (
-              <div className="flex items-center gap-3 px-4 py-3 bg-primary/5 rounded-xl border border-primary/10">
-                <div className="w-2 h-2 rounded-full bg-primary animate-pulse shrink-0" />
-                <Typography
-                  variant="small"
-                  className="font-bold text-primary text-[12px]"
-                >
-                  {t("vouchers.details.usageHint")}
-                </Typography>
-              </div>
-            )}
-          </div>
-          {/* Info Rows */}
           <div className="flex gap-3">
             <Surface
-              className="p-5 flex flex-1 items-center justify-between border border-slate-200 shadow-sm bg-white"
+              className="p-2 flex flex-1 items-center justify-between border border-slate-200 shadow-sm bg-white"
               variant="paper"
             >
               <div className="flex items-center gap-4">
@@ -171,13 +164,13 @@ export function VoucherDetailsPage() {
                 <div className="flex flex-col">
                   <Typography
                     variant="caption"
-                    className="text-slate-400 font-bold text-[10px]"
+                    className="text-slightly-black font-bold text-[10px]"
                   >
                     {t("vouchers.card.validUntil")}
                   </Typography>
                   <Typography
                     variant="h2"
-                    className="text-lg font-black text-slate-800"
+                    className="text-lg font-black text-full-dark"
                   >
                     {voucher.validUntil || "MM/YY"}
                   </Typography>
@@ -186,7 +179,7 @@ export function VoucherDetailsPage() {
             </Surface>
 
             <Surface
-              className="p-5 flex flex-1 items-center justify-between border border-slate-200 shadow-sm bg-white"
+              className="p-2 flex flex-1 items-center justify-between border border-slate-200 shadow-sm bg-white"
               variant="paper"
             >
               <div className="flex items-center gap-4">
@@ -196,20 +189,20 @@ export function VoucherDetailsPage() {
                 <div className="flex flex-col">
                   <Typography
                     variant="caption"
-                    className="text-slate-400 font-bold text-[10px]"
+                    className="text-slightly-black font-bold text-[10px]"
                   >
                     {t("vouchers.card.amountLabel")}
                   </Typography>
                   <div className="flex items-baseline gap-1">
                     <Typography
                       variant="h2"
-                      className="text-lg font-black text-slate-800 tabular-nums"
+                      className="text-lg font-black text-full-dark tabular-nums"
                     >
                       {voucher.allocation.toLocaleString()}
                     </Typography>
                     <Typography
                       variant="body"
-                      className="text-xs font-bold text-slate-500"
+                      className="text-xs font-bold text-slightly-black"
                     >
                       ₪
                     </Typography>
@@ -221,7 +214,7 @@ export function VoucherDetailsPage() {
           <div>
             {voucher.description && (
               <Surface
-                className="p-5 flex flex-col gap-2 border border-slate-200 shadow-sm bg-white"
+                className="p-2 flex flex-col gap-2 border border-slate-200 shadow-sm bg-white"
                 variant="paper"
               >
                 <div className="flex items-center gap-2">
@@ -231,7 +224,7 @@ export function VoucherDetailsPage() {
                   <Typography
                     variant="h2"
                     size="medium"
-                    className="text-slate-800 font-black uppercase"
+                    className="text-full-dark font-black uppercase"
                   >
                     {t("vouchers.details.description")}
                   </Typography>
@@ -239,7 +232,7 @@ export function VoucherDetailsPage() {
                 <Typography
                   variant="body"
                   size="medium"
-                  className="text-slate-600 font-medium leading-relaxed"
+                  className="text-main-dark font-medium leading-relaxed"
                 >
                   {voucher.description}
                 </Typography>

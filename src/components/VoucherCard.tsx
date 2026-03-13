@@ -142,11 +142,11 @@ export const VoucherCard = ({
           </Typography>
         </div>
 
-        <div className="flex justify-between items-center gap-4">
-          <div className="shrink-0 flex flex-col items-end backdrop-blur-md px-4 py-2.5 rounded-2xl   bg-black/10 border border-white/5">
+        <div className="flex justify-between items-stretch gap-4">
+          <div className="shrink-0 backdrop-blur-md px-4 py-2.5 rounded-2xl   bg-black/10 border border-white/5">
             <Typography
               variant="caption"
-              size="small"
+              size="medium"
               className="text-white/90 font-bold tabular-nums"
             >
               {t("vouchers.card.validUntil")} {balance.validUntil || "MM/YY"}
@@ -174,7 +174,6 @@ export const VoucherCard = ({
         </div>
       </div>
 
-      {/* Status Overlays */}
       {status === VOUCHER_STATUS.REDEEMED && (
         <div className="absolute inset-0 bg-black/40 backdrop-grayscale-[0.5] flex items-center justify-center pointer-events-none z-10">
           <div className="bg-white/20 backdrop-blur-md px-6 py-2 rounded-full border border-white/30 -rotate-12">

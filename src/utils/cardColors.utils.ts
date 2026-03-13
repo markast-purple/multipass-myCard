@@ -50,6 +50,8 @@ export interface CardColorSet {
   border: string;
   /** Glow shadow */
   glow: string;
+  /** Surface background (darkened version for containers) */
+  surface: string;
 }
 
 /**
@@ -70,6 +72,7 @@ export function getCardColors(index: number): CardColorSet {
   const gradTo = `hsla(${(h + 15) % 360}, ${sFrom}%, ${lTo}%, 0.90)`;
   const border = `hsla(${h}, 80%, 80%, 0.20)`;
   const glow = `hsla(${h}, 60%, 40%, 0.30)`;
+  const surface = `hsla(${h}, ${sFrom}%, ${Math.max(4, lFrom - 10)}%, 0.7)`;
 
-  return { gradFrom, gradVia, gradTo, border, glow };
+  return { gradFrom, gradVia, gradTo, border, glow, surface };
 }

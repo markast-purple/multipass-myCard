@@ -1,7 +1,7 @@
 import { cn } from "../../utils/cn.utils.ts";
-import type { ReactNode, ElementType } from "react";
+import type { ReactNode, ElementType, HTMLAttributes } from "react";
 
-interface ContainerProps {
+interface ContainerProps extends HTMLAttributes<HTMLElement> {
   children: ReactNode;
   className?: string;
   as?: ElementType;
@@ -13,6 +13,7 @@ export const Container = ({
   className,
   as: Component = "div",
   noPadding = false,
+  ...props
 }: ContainerProps) => {
   return (
     <Component
@@ -21,6 +22,7 @@ export const Container = ({
         !noPadding && "px-4 sm:px-6",
         className,
       )}
+      {...props}
     >
       {children}
     </Component>
