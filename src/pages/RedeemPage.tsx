@@ -30,8 +30,8 @@ export function RedeemPage() {
       {!success ? (
         <div className="flex flex-col flex-1 px-6 py-4 gap-4 max-w-md mx-auto w-full">
           <Typography
-            variant="body"
-            className="text-main-dark text-center font-medium"
+            variant="h1"
+            className="text-main-dark text-2xl font-semibold text-center"
           >
             {voucher.name}
           </Typography>
