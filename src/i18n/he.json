@@ -61,7 +61,8 @@
                 "merchant": "בית עסק",
                 "amount": "סכום",
                 "status": "סטטוס",
-                "dateTime": "תאריך ושעה",
+                "date": "תאריך",
+                "time": "שעה",
                 "transactionId": "מזהה עסקה",
                 "location": "סניף / מיקום"
             }

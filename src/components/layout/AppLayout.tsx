@@ -15,6 +15,7 @@ interface AppLayoutProps {
     description?: string;
     phoneNumber?: string;
     backTarget?: string;
+    hideHeader?: boolean;
   };
 }
 
@@ -22,13 +23,18 @@ export function AppLayout({ children, headerProps }: AppLayoutProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <Surface className="flex h-dvh flex-col no-bounce overflow-hidden" as="div">
+    <Surface
+      className="flex h-dvh flex-col no-bounce overflow-hidden rounded-none"
+      as="div"
+    >
       <SideMenu
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
         phoneNumber={headerProps?.phoneNumber}
       />
-      <Header {...headerProps} onOpenMenu={() => setIsMenuOpen(true)} />
+      {!headerProps?.hideHeader && (
+        <Header {...headerProps} onOpenMenu={() => setIsMenuOpen(true)} />
+      )}
       <main className={cn("flex-1 overflow-y-auto no-bounce")}>
         <Container className="min-h-full flex flex-col" noPadding>
           <div className="flex-1 flex flex-col">{children}</div>

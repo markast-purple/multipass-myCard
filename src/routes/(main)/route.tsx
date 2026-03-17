@@ -26,6 +26,7 @@ function LayoutComponent() {
   const headerProps = {
     isVouchersPage,
     isMainPage: isHistoryListPage,
+    hideHeader: isHistoryDetailsPage,
     title: isDetailsPage
       ? t("vouchers.details.title")
       : isRedeemPage
