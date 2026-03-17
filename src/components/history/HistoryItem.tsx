@@ -48,20 +48,11 @@ export function HistoryItem({ item, onClick }: HistoryItemProps) {
         onClick={onClick}
         className="w-full text-start hover:bg-slate-50 active:bg-slate-100 transition-colors"
       >
-        <div className="flex items-center gap-3">
-          <div className="w-24 shrink-0 flex items-center gap-2">
-            {time && (
-              <Typography
-                variant="caption"
-                size="small"
-                className="tabular-nums"
-              >
-                {time}
-              </Typography>
-            )}
+        <div className="flex items-center justify-start gap-3">
+          <div className="shrink-0 flex items-center gap-2">
             <div
               className={cn(
-                "h-9 w-9 rounded-full flex items-center justify-center shrink-0",
+                "h-11 w-11 rounded-full flex items-center justify-center shrink-0",
                 circle.bg,
                 circle.fg,
               )}
@@ -77,25 +68,41 @@ export function HistoryItem({ item, onClick }: HistoryItemProps) {
               <div className="min-w-0">
                 <Typography
                   variant="body"
-                  className="leading-tight font-bold truncate"
+                  className="leading-tight truncate text-gray-main"
                 >
                   {item.name}
                 </Typography>
               </div>
             </div>
 
-            {item.location && (
-              <div className="flex items-center gap-1 text-gray">
-                <MapPin className="h-3.5 w-3.5" />
-                <Typography variant="caption" className="font-medium">
-                  {item.location}
+            <div className="flex items-center gap-2">
+              {item.location && (
+                <div className="flex items-center gap-1 text-gray-main">
+                  <MapPin className="h-3.5 w-3.5" />
+                  <Typography
+                    variant="caption"
+                    className="font-medium text-gray-main"
+                  >
+                    {item.location}
+                  </Typography>
+                </div>
+              )}
+              {time && (
+                <Typography
+                  variant="caption"
+                  className="tabular-nums font-medium text-gray-main"
+                >
+                  {time}
                 </Typography>
-              </div>
-            )}
+              )}
+            </div>
           </div>
 
           <div className="flex flex-col items-end gap-1 shrink-0">
-            <Typography variant="h2" className="leading-none tabular-nums">
+            <Typography
+              variant="body"
+              className="leading-none tabular-nums font-medium"
+            >
               ₪{item.amount.toLocaleString()}
             </Typography>
           </div>

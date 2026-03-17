@@ -62,6 +62,7 @@
                 "amount": "סכום",
                 "status": "סטטוס",
                 "dateTime": "תאריך ושעה",
+                "transactionId": "מזהה עסקה",
                 "location": "סניף / מיקום"
             }
         },

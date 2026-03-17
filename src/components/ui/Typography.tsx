@@ -15,7 +15,7 @@ interface TypographyProps extends HTMLAttributes<HTMLElement> {
 const variantStyles: Record<TypographyVariant, string> = {
   h1: "font-bold leading-tight uppercase tracking-tight text-gray-main",
   h2: "font-semibold leading-snug text-gray-main",
-  body: "leading-relaxed text-gray",
+  body: "leading-relaxed text-gray-main",
   small: "leading-tight text-gray",
   caption: "font-bold uppercase tracking-wider text-gray",
 };
