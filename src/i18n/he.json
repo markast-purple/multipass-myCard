@@ -33,7 +33,40 @@
         "redemptionHistory": "היסטוריית מימושים",
         "participatingStores": "בתי עסק מכבדים",
         "customerService": "שיחת לקוחות",
+        "history": {
+            "searchPlaceholder": "חיפוש לפי בית עסק / תו / סניף",
+            "emptyTitle": "אין מימושים להצגה",
+            "emptySubtitle": "נסה לשנות סינון או חיפוש",
+            "filters": {
+                "all": "הכל",
+                "completed": "הושלם",
+                "failed": "נכשל",
+                "refunded": "הוחזר"
+            },
+            "groups": {
+                "today": "היום",
+                "yesterday": "אתמול",
+                "thisWeek": "השבוע"
+            },
+            "status": {
+                "completed": "הושלם",
+                "pending": "ממתין",
+                "failed": "נכשל",
+                "cancelled": "בוטל",
+                "refunded": "הוחזר"
+            },
+            "details": {
+                "title": "פרטי מימוש",
+                "notFound": "המימוש לא נמצא",
+                "merchant": "בית עסק",
+                "amount": "סכום",
+                "status": "סטטוס",
+                "dateTime": "תאריך ושעה",
+                "location": "סניף / מיקום"
+            }
+        },
         "showMore": "הצג עוד",
+        "showAll": "הצג הכל",
         "showLess": "הצג פחות",
         "status": {
             "success": "הושלם",

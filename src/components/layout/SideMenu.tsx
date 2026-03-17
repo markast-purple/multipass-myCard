@@ -13,6 +13,7 @@ import {
 import { Typography } from "../ui/Typography.tsx";
 import multipass_logo from "../../assets/multipass_logo.png";
 import { cn } from "../../utils/cn.utils.ts";
+import { useNavigate } from "@tanstack/react-router";
 
 interface SideMenuProps {
   isOpen: boolean;
@@ -22,6 +23,7 @@ interface SideMenuProps {
 
 export function SideMenu({ isOpen, onClose, phoneNumber }: SideMenuProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const menuSections = [
     {
@@ -102,14 +104,14 @@ export function SideMenu({ isOpen, onClose, phoneNumber }: SideMenuProps) {
               <Typography
                 variant="caption"
                 size="medium"
-                className="text-slightly-black font-bold uppercase tracking-wider"
+                className="text-gray font-bold uppercase tracking-wider"
               >
                 {t("vouchers.details.title")}
               </Typography>
               <Typography
                 variant="h2"
                 size="medium"
-                className="font-black text-full-dark"
+                className="font-black text-gray-main"
                 dir="ltr"
               >
                 {phoneNumber}
@@ -133,6 +135,8 @@ export function SideMenu({ isOpen, onClose, phoneNumber }: SideMenuProps) {
                   )}
                   onClick={() => {
                     onClose();
+                    if (item.id === "vouchers") navigate({ to: "/" });
+                    if (item.id === "history") navigate({ to: "/history" });
                   }}
                 >
                   <item.icon

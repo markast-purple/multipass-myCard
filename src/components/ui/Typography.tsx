@@ -13,11 +13,11 @@ interface TypographyProps extends HTMLAttributes<HTMLElement> {
 }
 
 const variantStyles: Record<TypographyVariant, string> = {
-  h1: "font-bold leading-tight uppercase tracking-tight text-full-dark",
-  h2: "font-semibold leading-snug text-full-dark",
-  body: "leading-relaxed text-main-dark",
-  small: "leading-tight text-slightly-black",
-  caption: "font-bold uppercase tracking-wider text-slightly-black",
+  h1: "font-bold leading-tight uppercase tracking-tight text-gray-main",
+  h2: "font-semibold leading-snug text-gray-main",
+  body: "leading-relaxed text-gray",
+  small: "leading-tight text-gray",
+  caption: "font-bold uppercase tracking-wider text-gray",
 };
 
 const sizeStyles: Record<TypographySize, string> = {

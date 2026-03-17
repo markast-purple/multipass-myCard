@@ -9,12 +9,14 @@ import { cn } from "../utils/cn.utils.ts";
 import { useNavigate } from "@tanstack/react-router";
 import { useVouchersPage } from "../hooks/useVouchersPage.ts";
 import { useVoucherHistory } from "../hooks/useVoucherHistory.ts";
-import { Receipt, History as HistoryIcon, MapPin } from "lucide-react";
+import { Receipt, History as HistoryIcon } from "lucide-react";
 import { useVoucherStore } from "../store/voucherStore.ts";
 import { Typography } from "../components/ui/Typography.tsx";
 import { Button } from "../components/ui/Button.tsx";
 import { Surface } from "../components/ui/Surface.tsx";
 import { Container } from "../components/ui/Container.tsx";
+import { HistoryItem } from "../components/history/HistoryItem.tsx";
+import { SegmentedTabs } from "../components/ui/SegmentedTabs.tsx";
 
 const TABS: VoucherStatus[] = [
   VOUCHER_STATUS.ACTIVE,
@@ -48,8 +50,11 @@ export function VouchersPage() {
   const expandedCardRef = useRef<HTMLDivElement>(null);
 
   const { history } = useVoucherHistory();
-  const [showAllHistory, setShowAllHistory] = useState(false);
-  const displayedHistory = showAllHistory ? history : history.slice(0, 4);
+  const activeVoucherId = vouchers[expandedIndex]?.id;
+  const filteredHistory = activeVoucherId
+    ? history.filter((item) => item.voucherId === activeVoucherId)
+    : [];
+  const displayedHistory = filteredHistory.slice(0, 2);
 
   useEffect(() => {
     const el = expandedCardRef.current;
@@ -77,30 +82,14 @@ export function VouchersPage() {
   return (
     <Container className="flex flex-col min-h-full" noPadding>
       <div className="z-40 px-4 pt-4 pb-2">
-        <Surface
-          variant="muted"
-          className="flex gap-1 p-1 rounded-xl border border-border"
-        >
-          {TABS.map((tab) => (
-            <button
-              key={tab}
-              onClick={() => onTabChange(tab)}
-              className={cn(
-                "flex-1 px-3 py-2.5 rounded-lg transition-all duration-200",
-                activeTab === tab
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-slightly-black hover:text-full-dark active:bg-gray-200",
-              )}
-            >
-              <Typography
-                variant="small"
-                className="font-semibold text-inherit"
-              >
-                {t(`vouchers.tabs.${tab}`)}
-              </Typography>
-            </button>
-          ))}
-        </Surface>
+        <SegmentedTabs
+          tabs={TABS.map((tab) => ({
+            key: tab,
+            label: t(`vouchers.tabs.${tab}`),
+          }))}
+          value={activeTab}
+          onChange={onTabChange}
+        />
       </div>
 
       <div className="flex-1 py-4 flex flex-col gap-4">
@@ -132,7 +121,7 @@ export function VouchersPage() {
           <div className="flex flex-col items-center justify-center py-16 gap-4 px-4">
             <Typography
               variant="body"
-              className="text-slightly-black font-medium text-center"
+              className="text-gray font-medium text-center"
             >
               {t("vouchers.error.title")}
             </Typography>
@@ -146,13 +135,10 @@ export function VouchersPage() {
               <Receipt className="h-10 w-10 text-slightly-black/40" />
             </div>
             <div className="flex flex-col gap-2 text-center">
-              <Typography variant="h2" className="text-full-dark font-bold">
+              <Typography variant="h2" className="text-gray-main font-bold">
                 {t(`vouchers.empty.${activeTab}`)}
               </Typography>
-              <Typography
-                variant="body"
-                className="text-slightly-black max-w-[240px]"
-              >
+              <Typography variant="body" className="text-gray max-w-[240px]">
                 {t("vouchers.subtitle")}
               </Typography>
             </div>
@@ -232,125 +218,58 @@ export function VouchersPage() {
             <div className="p-2 bg-primary/10 rounded-xl">
               <HistoryIcon className="h-5 w-5 text-primary" strokeWidth={2.5} />
             </div>
-            <Typography variant="h2" className="text-full-dark">
+            <Typography variant="h2" className="text-gray-main">
               {t("vouchers.redemptionHistory")}
             </Typography>
           </div>
 
           <div className="flex flex-col">
-            {displayedHistory.map((item, index) => {
-              const displayDate = item.date.split(" ")[0];
-              const displayTime = item.date.split(" ")[1];
-              const isFirstInDate =
-                index === 0 ||
-                displayedHistory[index - 1].date.split(" ")[0] !== displayDate;
-
-              return (
-                <div key={item.id} className="flex flex-col">
-                  {isFirstInDate && (
-                    <div className="pt-4 pb-2">
-                      <Typography
-                        variant="caption"
-                        className="font-black text-full-dark"
-                      >
-                        {displayDate}
-                      </Typography>
-                    </div>
-                  )}
+            {filteredHistory.length === 0 ? (
+              <Surface variant="muted" className="p-6 rounded-2xl text-center">
+                <Typography variant="h2" className="font-black">
+                  {t("vouchers.history.emptyTitle")}
+                </Typography>
+                <Typography variant="body" className="mt-2">
+                  {t("vouchers.history.emptySubtitle")}
+                </Typography>
+              </Surface>
+            ) : (
+              <>
+                {displayedHistory.map((item, index) => (
                   <div
-                    className={cn(
-                      "flex gap-4 py-4 -mx-4 px-4",
-                      index !== displayedHistory.length - 1 &&
-                        !(
-                          index < displayedHistory.length - 1 &&
-                          displayedHistory[index + 1].date.split(" ")[0] !==
-                            displayDate
-                        ) &&
-                        "border-b border-slate-100",
-                    )}
+                    key={item.id}
+                    className={cn("flex flex-col", index !== 0 && "pt-2")}
                   >
-                    <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center shrink-0">
-                      <Receipt className="h-5 w-5 text-slightly-black/50" />
-                    </div>
-                    <div className="flex-1 flex flex-col gap-0.5">
-                      <div className="flex justify-between items-start">
-                        <Typography
-                          variant="body"
-                          className="font-bold leading-tight"
-                        >
-                          {item.provider}
-                        </Typography>
-                        <div className="flex flex-col items-end gap-1">
-                          <Typography variant="h2" className="leading-none">
-                            ₪{item.amount.toLocaleString()}
-                          </Typography>
-                          <div className="flex items-center gap-1.5">
-                            <div
-                              className={cn(
-                                "w-1.5 h-1.5 rounded-full shrink-0",
-                                item.status === "success"
-                                  ? "bg-success"
-                                  : "bg-error",
-                              )}
-                            />
-                            <Typography
-                              variant="caption"
-                              className={cn(
-                                "font-bold",
-                                item.status === "success"
-                                  ? "text-success"
-                                  : "text-error",
-                              )}
-                            >
-                              {t(`vouchers.status.${item.status}`)}
-                            </Typography>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Typography
-                          variant="caption"
-                          className="text-slightly-black font-medium"
-                        >
-                          {displayTime}
-                        </Typography>
-                        {item.location && (
-                          <div className="flex items-center gap-1 text-slightly-black/60">
-                            <MapPin className="h-3 w-3" />
-                            <Typography
-                              variant="caption"
-                              className="font-medium"
-                            >
-                              {item.location}
-                            </Typography>
-                          </div>
-                        )}
-                      </div>
-                    </div>
+                    <Typography
+                      variant="caption"
+                      size="medium"
+                      className="uppercase text-gray-main truncate pb-2"
+                    >
+                      {item.date.split(" ")[0]}
+                    </Typography>
+                    <HistoryItem
+                      item={item}
+                      onClick={() =>
+                        navigate({
+                          to: "/history/$redemptionId",
+                          params: { redemptionId: item.id },
+                        })
+                      }
+                    />
                   </div>
-                </div>
-              );
-            })}
+                ))}
 
-            {!showAllHistory && history.length > 4 && (
-              <Button
-                variant="secondary"
-                fullWidth
-                onClick={() => setShowAllHistory(true)}
-                className="mt-6 py-4"
-              >
-                {t("vouchers.showMore")}
-              </Button>
-            )}
-            {showAllHistory && (
-              <Button
-                variant="ghost"
-                fullWidth
-                onClick={() => setShowAllHistory(false)}
-                className="mt-4 text-slightly-black"
-              >
-                {t("vouchers.showLess")}
-              </Button>
+                {filteredHistory.length > 2 && (
+                  <Button
+                    variant="secondary"
+                    fullWidth
+                    onClick={() => navigate({ to: "/history" })}
+                    className="mt-6 py-4"
+                  >
+                    {t("vouchers.showAll")}
+                  </Button>
+                )}
+              </>
             )}
           </div>
         </Surface>

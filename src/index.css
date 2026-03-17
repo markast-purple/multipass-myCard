@@ -1,11 +1,27 @@
-@import "tailwindcss";
+@import "tailwindcss/index.css";
+
+@font-face {
+  font-family: "Noto Sans Hebrew";
+  src: url("/fonts/NotoSansHebrew-VariableFont_wdth,wght.ttf")
+    format("truetype");
+  font-weight: 100 900;
+  font-stretch: 75% 100%;
+  font-display: swap;
+}
 
 @theme {
   /* Colors */
   --color-primary: #1a5c5c;
+  --color-primary-soft: #e6f0f0;
+  --color-primary-soft-border: #bcd6d6;
+  --color-primary-hard: #0f3b3b;
   --color-primary-foreground: #ffffff;
   --color-secondary: #f3f4f6;
   --color-secondary-foreground: #1f2937;
+
+  --color-gray: #6b7280;
+  --color-gray-soft: #9ca3af;
+  --color-gray-main: #374151;
 
   --color-surface: #ffffff;
   --color-surface-muted: #f9fafb;
@@ -18,7 +34,8 @@
   --color-border: #e5e7eb;
 
   /* Typography */
-  --font-primary: "Inter", system-ui, -apple-system, sans-serif;
+  --font-primary: "Noto Sans Hebrew", system-ui, -apple-system, sans-serif;
+  --font-sans: var(--font-primary);
 
   --text-h1: 1.875rem; /* 30px */
   --text-h1--line-height: 2.25rem;

@@ -58,6 +58,6 @@ export interface RedemptionHistoryItem {
   provider: string;
   amount: number;
   date: string;
-  status: "success" | "failed";
+  status: "success" | "pending" | "failed" | "cancelled" | "refunded";
   location?: string;
 }

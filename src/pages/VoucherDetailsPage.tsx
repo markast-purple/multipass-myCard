@@ -164,13 +164,13 @@ export function VoucherDetailsPage() {
                 <div className="flex flex-col">
                   <Typography
                     variant="caption"
-                    className="text-slightly-black font-bold text-[10px]"
+                    className="text-gray font-bold text-[10px]"
                   >
                     {t("vouchers.card.validUntil")}
                   </Typography>
                   <Typography
                     variant="h2"
-                    className="text-lg font-black text-full-dark"
+                    className="text-lg font-black text-gray-main"
                   >
                     {voucher.validUntil || "MM/YY"}
                   </Typography>
@@ -189,20 +189,20 @@ export function VoucherDetailsPage() {
                 <div className="flex flex-col">
                   <Typography
                     variant="caption"
-                    className="text-slightly-black font-bold text-[10px]"
+                    className="text-gray font-bold text-[10px]"
                   >
                     {t("vouchers.card.amountLabel")}
                   </Typography>
                   <div className="flex items-baseline gap-1">
                     <Typography
                       variant="h2"
-                      className="text-lg font-black text-full-dark tabular-nums"
+                      className="text-lg font-black text-gray-main tabular-nums"
                     >
                       {voucher.allocation.toLocaleString()}
                     </Typography>
                     <Typography
                       variant="body"
-                      className="text-xs font-bold text-slightly-black"
+                      className="text-xs font-bold text-gray"
                     >
                       ₪
                     </Typography>
@@ -224,7 +224,7 @@ export function VoucherDetailsPage() {
                   <Typography
                     variant="h2"
                     size="medium"
-                    className="text-full-dark font-black uppercase"
+                    className="text-gray-main font-black uppercase"
                   >
                     {t("vouchers.details.description")}
                   </Typography>
@@ -232,7 +232,7 @@ export function VoucherDetailsPage() {
                 <Typography
                   variant="body"
                   size="medium"
-                  className="text-main-dark font-medium leading-relaxed"
+                  className="text-gray font-medium leading-relaxed"
                 >
                   {voucher.description}
                 </Typography>

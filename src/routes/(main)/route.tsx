@@ -13,6 +13,9 @@ function LayoutComponent() {
   const currentPath = location.pathname;
 
   const isVouchersPage = currentPath === ROUTES.HOME;
+  const isHistoryListPage = currentPath === "/history";
+  const isHistoryDetailsPage =
+    currentPath.startsWith("/history/") && currentPath !== "/history";
   const isDetailsPage =
     currentPath.includes("/vouchers/") && !currentPath.endsWith("/redeem");
   const isRedeemPage = currentPath.endsWith("/redeem");
@@ -22,10 +25,15 @@ function LayoutComponent() {
 
   const headerProps = {
     isVouchersPage,
+    isMainPage: isHistoryListPage,
     title: isDetailsPage
       ? t("vouchers.details.title")
       : isRedeemPage
         ? t("vouchers.redeem.title")
+        : isHistoryListPage
+          ? t("vouchers.redemptionHistory")
+          : isHistoryDetailsPage
+            ? t("vouchers.history.details.title")
         : undefined,
     description: isVouchersPage ? "השוברים שלי" : undefined,
     phoneNumber: "050-1234567",
@@ -33,6 +41,10 @@ function LayoutComponent() {
       ? `/vouchers/${voucherId}`
       : isDetailsPage
         ? "/"
+        : isHistoryDetailsPage
+          ? "/history"
+          : isHistoryListPage
+            ? "/"
         : undefined,
   };
 

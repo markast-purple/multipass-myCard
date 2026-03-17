@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as mainRouteRouteImport } from './routes/(main)/route'
 import { Route as mainIndexRouteImport } from './routes/(main)/index'
+import { Route as mainHistoryIndexRouteImport } from './routes/(main)/history/index'
+import { Route as mainHistoryRedemptionIdRouteImport } from './routes/(main)/history/$redemptionId'
 import { Route as mainVouchersVoucherIdIndexRouteImport } from './routes/(main)/vouchers/$voucherId/index'
 import { Route as mainVouchersVoucherIdRedeemRouteImport } from './routes/(main)/vouchers/$voucherId/redeem'
 
@@ -21,6 +23,16 @@ const mainRouteRoute = mainRouteRouteImport.update({
 const mainIndexRoute = mainIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => mainRouteRoute,
+} as any)
+const mainHistoryIndexRoute = mainHistoryIndexRouteImport.update({
+  id: '/history/',
+  path: '/history/',
+  getParentRoute: () => mainRouteRoute,
+} as any)
+const mainHistoryRedemptionIdRoute = mainHistoryRedemptionIdRouteImport.update({
+  id: '/history/$redemptionId',
+  path: '/history/$redemptionId',
   getParentRoute: () => mainRouteRoute,
 } as any)
 const mainVouchersVoucherIdIndexRoute =
@@ -38,11 +50,15 @@ const mainVouchersVoucherIdRedeemRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof mainIndexRoute
+  '/history/$redemptionId': typeof mainHistoryRedemptionIdRoute
+  '/history/': typeof mainHistoryIndexRoute
   '/vouchers/$voucherId/redeem': typeof mainVouchersVoucherIdRedeemRoute
   '/vouchers/$voucherId/': typeof mainVouchersVoucherIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof mainIndexRoute
+  '/history/$redemptionId': typeof mainHistoryRedemptionIdRoute
+  '/history': typeof mainHistoryIndexRoute
   '/vouchers/$voucherId/redeem': typeof mainVouchersVoucherIdRedeemRoute
   '/vouchers/$voucherId': typeof mainVouchersVoucherIdIndexRoute
 }
@@ -50,18 +66,32 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/(main)': typeof mainRouteRouteWithChildren
   '/(main)/': typeof mainIndexRoute
+  '/(main)/history/$redemptionId': typeof mainHistoryRedemptionIdRoute
+  '/(main)/history/': typeof mainHistoryIndexRoute
   '/(main)/vouchers/$voucherId/redeem': typeof mainVouchersVoucherIdRedeemRoute
   '/(main)/vouchers/$voucherId/': typeof mainVouchersVoucherIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/vouchers/$voucherId/redeem' | '/vouchers/$voucherId/'
+  fullPaths:
+    | '/'
+    | '/history/$redemptionId'
+    | '/history/'
+    | '/vouchers/$voucherId/redeem'
+    | '/vouchers/$voucherId/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/vouchers/$voucherId/redeem' | '/vouchers/$voucherId'
+  to:
+    | '/'
+    | '/history/$redemptionId'
+    | '/history'
+    | '/vouchers/$voucherId/redeem'
+    | '/vouchers/$voucherId'
   id:
     | '__root__'
     | '/(main)'
     | '/(main)/'
+    | '/(main)/history/$redemptionId'
+    | '/(main)/history/'
     | '/(main)/vouchers/$voucherId/redeem'
     | '/(main)/vouchers/$voucherId/'
   fileRoutesById: FileRoutesById
@@ -86,6 +116,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof mainIndexRouteImport
       parentRoute: typeof mainRouteRoute
     }
+    '/(main)/history/': {
+      id: '/(main)/history/'
+      path: '/history'
+      fullPath: '/history/'
+      preLoaderRoute: typeof mainHistoryIndexRouteImport
+      parentRoute: typeof mainRouteRoute
+    }
+    '/(main)/history/$redemptionId': {
+      id: '/(main)/history/$redemptionId'
+      path: '/history/$redemptionId'
+      fullPath: '/history/$redemptionId'
+      preLoaderRoute: typeof mainHistoryRedemptionIdRouteImport
+      parentRoute: typeof mainRouteRoute
+    }
     '/(main)/vouchers/$voucherId/': {
       id: '/(main)/vouchers/$voucherId/'
       path: '/vouchers/$voucherId'
@@ -105,12 +149,16 @@ declare module '@tanstack/react-router' {
 
 interface mainRouteRouteChildren {
   mainIndexRoute: typeof mainIndexRoute
+  mainHistoryRedemptionIdRoute: typeof mainHistoryRedemptionIdRoute
+  mainHistoryIndexRoute: typeof mainHistoryIndexRoute
   mainVouchersVoucherIdRedeemRoute: typeof mainVouchersVoucherIdRedeemRoute
   mainVouchersVoucherIdIndexRoute: typeof mainVouchersVoucherIdIndexRoute
 }
 
 const mainRouteRouteChildren: mainRouteRouteChildren = {
   mainIndexRoute: mainIndexRoute,
+  mainHistoryRedemptionIdRoute: mainHistoryRedemptionIdRoute,
+  mainHistoryIndexRoute: mainHistoryIndexRoute,
   mainVouchersVoucherIdRedeemRoute: mainVouchersVoucherIdRedeemRoute,
   mainVouchersVoucherIdIndexRoute: mainVouchersVoucherIdIndexRoute,
 }

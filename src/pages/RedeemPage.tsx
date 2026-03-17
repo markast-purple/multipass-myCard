@@ -31,7 +31,7 @@ export function RedeemPage() {
         <div className="flex flex-col flex-1 px-6 py-4 gap-4 max-w-md mx-auto w-full">
           <Typography
             variant="h1"
-            className="text-main-dark text-2xl font-semibold text-center"
+            className="text-gray-main text-2xl font-semibold text-center"
           >
             {voucher.name}
           </Typography>
@@ -74,11 +74,11 @@ export function RedeemPage() {
               <div className="flex flex-col items-center gap-2">
                 <Typography
                   variant="caption"
-                  className="text-slightly-black font-bold uppercase tracking-[0.2em] text-[11px]"
+                  className="text-gray font-bold uppercase tracking-[0.2em] text-[11px]"
                 >
                   {t("vouchers.redeem.redeemCode")}
                 </Typography>
-                <Typography className="text-3xl font-mono font-black tracking-[0.15em] text-full-dark tabular-nums">
+                <Typography className="text-3xl font-mono font-black tracking-[0.15em] text-gray-main tabular-nums">
                   {numericCode}
                 </Typography>
               </div>
@@ -103,7 +103,7 @@ export function RedeemPage() {
                     variant="small"
                     className={cn(
                       "font-bold uppercase tracking-widest",
-                      copied ? "text-white" : "text-main-dark",
+                      copied ? "text-white" : "text-gray-main",
                     )}
                   >
                     {copied ? t("common.copied") : t("common.copy")}
@@ -125,13 +125,13 @@ export function RedeemPage() {
           <div className="text-center mt-12 max-w-xs">
             <Typography
               variant="h1"
-              className="text-3xl font-black text-full-dark mb-4 tracking-tight"
+              className="text-3xl font-black text-gray-main mb-4 tracking-tight"
             >
               {t("vouchers.redeem.success")}
             </Typography>
             <Typography
               variant="body"
-              className="text-slightly-black font-medium leading-relaxed"
+              className="text-gray font-medium leading-relaxed"
             >
               {t("vouchers.redeem.successDesc")}
             </Typography>
