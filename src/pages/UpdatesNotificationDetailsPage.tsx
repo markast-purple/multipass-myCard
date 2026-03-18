@@ -50,115 +50,122 @@ export function UpdatesNotificationDetailsPage() {
       : t("vouchers.notifications.badges.alert");
 
   return (
-    <Container className="px-4 py-6 flex flex-col gap-6" noPadding>
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center gap-3">
-          <div
-            className={
-              notification.category === "alerts"
-                ? "h-12 w-12 rounded-2xl bg-error/10 text-error flex items-center justify-center"
-                : "h-12 w-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center"
-            }
-          >
-            <Bell className="h-6 w-6" />
-          </div>
-          <div className="flex-1">
-            <Typography variant="h1" size="large" className="font-black">
-              {notification.title}
-            </Typography>
-            <div className="flex items-center gap-2 mt-1">
-              <span
+    <Container className="px-4 py-6 flex-1 flex" noPadding>
+      <div className="flex flex-col flex-1 justify-center gap-10">
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-3">
+              <div
                 className={
                   notification.category === "alerts"
-                    ? "px-2.5 py-1 rounded-full text-xs font-semibold bg-error/10 text-error"
-                    : "px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary"
+                    ? "h-12 w-12 rounded-2xl bg-error/10 text-error flex items-center justify-center"
+                    : "h-12 w-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center"
                 }
               >
-                {badgeLabel}
-              </span>
-              <Typography variant="caption" className="text-gray">
-                {dateLabel} · {timeLabel}
-              </Typography>
+                <Bell className="h-6 w-6" />
+              </div>
+              <div className="flex-1">
+                <Typography variant="h1" size="large" className="font-black">
+                  {notification.title}
+                </Typography>
+                <div className="flex items-center gap-2 mt-1">
+                  <span
+                    className={
+                      notification.category === "alerts"
+                        ? "px-2.5 py-1 rounded-full text-xs font-semibold bg-error/10 text-error"
+                        : "px-2.5 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary"
+                    }
+                  >
+                    {badgeLabel}
+                  </span>
+                  <Typography variant="caption" className="text-gray">
+                    {dateLabel} · {timeLabel}
+                  </Typography>
+                </div>
+              </div>
             </div>
+
+            <Typography variant="body" className="text-gray">
+              {notification.description}
+            </Typography>
           </div>
+
+          <Surface variant="muted" className="p-5 rounded-2xl">
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center justify-between gap-4">
+                <Typography
+                  variant="body"
+                  className="font-medium text-gray uppercase"
+                >
+                  {t("vouchers.notifications.details.category")}
+                </Typography>
+                <Typography variant="body" className="font-bold">
+                  {badgeLabel}
+                </Typography>
+              </div>
+              <div className="flex items-center justify-between gap-4">
+                <Typography
+                  variant="body"
+                  className="font-medium text-gray uppercase"
+                >
+                  {t("vouchers.notifications.details.date")}
+                </Typography>
+                <Typography variant="body" className="font-bold">
+                  {dateLabel}
+                </Typography>
+              </div>
+              <div className="flex items-center justify-between gap-4">
+                <Typography
+                  variant="body"
+                  className="font-medium text-gray uppercase"
+                >
+                  {t("vouchers.notifications.details.time")}
+                </Typography>
+                <Typography variant="body" className="font-bold">
+                  {timeLabel}
+                </Typography>
+              </div>
+              <div className="flex items-center justify-between gap-4">
+                <Typography
+                  variant="body"
+                  className="font-medium text-gray uppercase"
+                >
+                  {t("vouchers.notifications.details.relatedVoucher")}
+                </Typography>
+                <Typography variant="body" className="font-bold">
+                  {voucher?.name ??
+                    t("vouchers.notifications.details.systemMessage")}
+                </Typography>
+              </div>
+            </div>
+          </Surface>
         </div>
 
-        <Typography variant="body" className="text-gray">
-          {notification.description}
-        </Typography>
+        <div className="pt-6">
+          {voucher ? (
+            <Button
+              variant="primary"
+              fullWidth
+              onClick={() =>
+                navigate({
+                  to: "/vouchers/$voucherId",
+                  params: { voucherId: voucher.id },
+                })
+              }
+            >
+              {t("vouchers.notifications.viewVoucher")}
+            </Button>
+          ) : (
+            <Button
+              variant="secondary"
+              fullWidth
+              onClick={() => navigate({ to: "/" })}
+            >
+              {t("vouchers.notifications.viewAllVouchers")}
+            </Button>
+          )}
+        </div>
       </div>
-
-      <Surface variant="muted" className="p-5 rounded-2xl">
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center justify-between gap-4">
-            <Typography
-              variant="body"
-              className="font-medium text-gray uppercase"
-            >
-              {t("vouchers.notifications.details.category")}
-            </Typography>
-            <Typography variant="body" className="font-bold">
-              {badgeLabel}
-            </Typography>
-          </div>
-          <div className="flex items-center justify-between gap-4">
-            <Typography
-              variant="body"
-              className="font-medium text-gray uppercase"
-            >
-              {t("vouchers.notifications.details.date")}
-            </Typography>
-            <Typography variant="body" className="font-bold">
-              {dateLabel}
-            </Typography>
-          </div>
-          <div className="flex items-center justify-between gap-4">
-            <Typography
-              variant="body"
-              className="font-medium text-gray uppercase"
-            >
-              {t("vouchers.notifications.details.time")}
-            </Typography>
-            <Typography variant="body" className="font-bold">
-              {timeLabel}
-            </Typography>
-          </div>
-          <div className="flex items-center justify-between gap-4">
-            <Typography
-              variant="body"
-              className="font-medium text-gray uppercase"
-            >
-              {t("vouchers.notifications.details.relatedVoucher")}
-            </Typography>
-            <Typography variant="body" className="font-bold">
-              {voucher?.name ?? t("vouchers.notifications.details.systemMessage")}
-            </Typography>
-          </div>
-        </div>
-      </Surface>
-
-      {voucher ? (
-        <Button
-          variant="primary"
-          fullWidth
-          onClick={() =>
-            navigate({
-              to: "/vouchers/$voucherId",
-              params: { voucherId: voucher.id },
-            })
-          }
-        >
-          {t("vouchers.notifications.viewVoucher")}
-        </Button>
-      ) : (
-        <Button
-          variant="secondary"
-          fullWidth
-          onClick={() => navigate({ to: "/" })}
-        >
-          {t("vouchers.notifications.viewAllVouchers")}
-        </Button>
-      )}
     </Container>
   );
 }
