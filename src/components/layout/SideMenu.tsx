@@ -137,6 +137,8 @@ export function SideMenu({ isOpen, onClose, phoneNumber }: SideMenuProps) {
                     onClose();
                     if (item.id === "vouchers") navigate({ to: "/" });
                     if (item.id === "history") navigate({ to: "/history" });
+                    if (item.id === "notifications")
+                      navigate({ to: "/notifications" });
                   }}
                 >
                   <item.icon

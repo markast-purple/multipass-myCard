@@ -17,11 +17,7 @@ export const Container = ({
 }: ContainerProps) => {
   return (
     <Component
-      className={cn(
-        "w-full mx-auto max-w-md",
-        !noPadding && "px-4 sm:px-6",
-        className,
-      )}
+      className={cn("w-full mx-auto", !noPadding && "px-4 sm:px-6", className)}
       {...props}
     >
       {children}

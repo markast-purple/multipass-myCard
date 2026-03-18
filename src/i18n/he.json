@@ -98,6 +98,30 @@
             "viewRedeemed": "צפה בתווים שמומשו",
             "backToActive": "חזרה לתווים פעילים"
         },
+        "notifications": {
+            "title": "עדכונים והתראות",
+            "subtitle": "מרכז עדכונים מרוכז לכל התווים והמערכת",
+            "tabs": {
+                "updates": "עדכונים",
+                "alerts": "התראות"
+            },
+            "badges": {
+                "update": "עדכון",
+                "alert": "התראה"
+            },
+            "emptyTitle": "אין עדכונים להצגה",
+            "emptySubtitle": "הכל מעודכן בינתיים",
+            "viewVoucher": "פתיחת התו",
+            "viewAllVouchers": "לרשימת התווים",
+            "details": {
+                "notFound": "העדכון לא נמצא",
+                "category": "קטגוריה",
+                "date": "תאריך",
+                "time": "שעה",
+                "relatedVoucher": "תו קשור",
+                "systemMessage": "הודעת מערכת"
+            }
+        },
         "menu": {
             "myVouchers": "התווים שלי",
             "redemptionHistory": "היסטוריית מימושים",

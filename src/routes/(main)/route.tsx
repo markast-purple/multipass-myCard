@@ -19,6 +19,10 @@ function LayoutComponent() {
   const isDetailsPage =
     currentPath.includes("/vouchers/") && !currentPath.endsWith("/redeem");
   const isRedeemPage = currentPath.endsWith("/redeem");
+  const isNotificationsPage = currentPath === ROUTES.NOTIFICATIONS;
+  const isNotificationDetailsPage =
+    currentPath.startsWith(`${ROUTES.NOTIFICATIONS}/`) &&
+    currentPath !== ROUTES.NOTIFICATIONS;
 
   const voucherIdMatch = currentPath.match(/\/vouchers\/([^\/]+)/);
   const voucherId = voucherIdMatch ? voucherIdMatch[1] : undefined;
@@ -44,9 +48,11 @@ function LayoutComponent() {
         ? "/"
         : isHistoryDetailsPage
           ? "/history"
-          : isHistoryListPage
-            ? "/"
-        : undefined,
+          : isNotificationDetailsPage
+            ? "/notifications"
+            : isHistoryListPage || isNotificationsPage
+              ? "/"
+          : undefined,
   };
 
   return (
