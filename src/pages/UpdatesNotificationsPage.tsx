@@ -1,23 +1,16 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "@tanstack/react-router";
-import {
-  Bell,
-  CheckCircle2,
-  Clock3,
-  XCircle,
-} from "lucide-react";
+import { Bell, CheckCircle2, Clock3, XCircle } from "lucide-react";
 import { Container } from "../components/ui/Container.tsx";
 import { Surface } from "../components/ui/Surface.tsx";
 import { Typography } from "../components/ui/Typography.tsx";
 import { SegmentedTabs } from "../components/ui/SegmentedTabs.tsx";
-import { cn } from "../utils/cn.utils.ts";
 import {
   MOCK_NOTIFICATIONS,
   type NotificationCategory,
   type NotificationItem,
 } from "../mocks/notifications.mock.ts";
-import { MOCK_VOUCHERS } from "../mocks/vouchers.mock.ts";
 
 const ICONS: Record<string, typeof Bell> = {
   notif_1: Clock3,
@@ -33,11 +26,6 @@ export function UpdatesNotificationsPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<NotificationCategory>("updates");
-
-  const voucherMap = useMemo(
-    () => new Map(MOCK_VOUCHERS.map((voucher) => [voucher.id, voucher])),
-    [],
-  );
 
   const tabs = [
     {
@@ -55,10 +43,41 @@ export function UpdatesNotificationsPage() {
     [activeTab],
   );
 
-  const badgeLabel = (category: NotificationCategory) =>
-    category === "updates"
-      ? t("vouchers.notifications.badges.update")
-      : t("vouchers.notifications.badges.alert");
+  const groups = useMemo(() => {
+    const sorted = [...notifications].sort((a, b) =>
+      a.date < b.date ? 1 : -1,
+    );
+
+    const groupMap = new Map<string, NotificationItem[]>();
+    sorted.forEach((item) => {
+      const dateKey = item.date.split(" ")[0];
+      const items = groupMap.get(dateKey) ?? [];
+      items.push(item);
+      groupMap.set(dateKey, items);
+    });
+
+    return Array.from(groupMap.entries()).map(([dateKey, items]) => ({
+      key: dateKey,
+      label: dateKey,
+      items,
+    }));
+  }, [notifications]);
+
+  const dateLabel = (dateKey: string) => {
+    const [day, month, year] = dateKey.split("/").map(Number);
+    if (!day || !month || !year) return dateKey;
+    const itemDate = new Date(year, month - 1, day);
+    const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+
+    if (itemDate.getTime() === today.getTime())
+      return t("vouchers.history.groups.today");
+    if (itemDate.getTime() === yesterday.getTime())
+      return t("vouchers.history.groups.yesterday");
+    return dateKey;
+  };
 
   return (
     <Container className="flex flex-col h-full" noPadding>
@@ -75,7 +94,6 @@ export function UpdatesNotificationsPage() {
             tabs={tabs}
             value={activeTab}
             onChange={setActiveTab}
-            density="compact"
           />
         </div>
       </div>
@@ -91,24 +109,35 @@ export function UpdatesNotificationsPage() {
             </Typography>
           </Surface>
         ) : (
-          notifications.map((item) => (
-            <NotificationCard
-              key={item.id}
-              item={item}
-              badgeLabel={badgeLabel(item.category)}
-              voucherName={
-                item.voucherId
-                  ? voucherMap.get(item.voucherId)?.name
-                  : undefined
-              }
-              icon={ICONS[item.id] ?? Bell}
-              onClick={() =>
-                navigate({
-                  to: "/notifications/$notificationId",
-                  params: { notificationId: item.id },
-                })
-              }
-            />
+          groups.map((group) => (
+            <div key={group.key} className="flex flex-col gap-3">
+              <Typography
+                variant="caption"
+                size="medium"
+                className="uppercase text-gray-main truncate"
+              >
+                {dateLabel(group.label)}
+              </Typography>
+              <div className="flex flex-col">
+                {group.items.map((item, index) => (
+                  <div key={item.id} className="flex flex-col">
+                    <NotificationCard
+                      item={item}
+                      icon={ICONS[item.id] ?? Bell}
+                      onClick={() =>
+                        navigate({
+                          to: "/notifications/$notificationId",
+                          params: { notificationId: item.id },
+                        })
+                      }
+                    />
+                    {index < group.items.length - 1 && (
+                      <div className="h-px bg-slate-100 mx-4" />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
           ))
         )}
       </div>
@@ -118,85 +147,49 @@ export function UpdatesNotificationsPage() {
 
 function NotificationCard({
   item,
-  badgeLabel,
-  voucherName,
   icon: Icon,
   onClick,
 }: {
   item: NotificationItem;
-  badgeLabel: string;
-  voucherName?: string;
   icon: typeof Bell;
   onClick: () => void;
 }) {
-  const [dateLabel, timeLabel] = item.date.split(" ");
+  const [, timeLabel] = item.date.split(" ");
+  const relativeLabel = timeLabel;
 
   return (
     <button
       onClick={onClick}
-      className={cn(
-        "w-full text-start p-4 rounded-2xl border transition-all",
-        item.read
-          ? "bg-white border-border hover:border-primary/40"
-          : "bg-primary/5 border-primary/30",
-      )}
+      className="w-full text-start py-3 rounded-2xl transition-all bg-white hover:bg-slate-50"
     >
       <div className="flex items-start gap-3">
-        <div
-          className={cn(
-            "h-11 w-11 rounded-xl flex items-center justify-center shrink-0",
-            item.category === "alerts"
-              ? "bg-error/10 text-error"
-              : "bg-primary/10 text-primary",
-          )}
-        >
-          <Icon className="h-5 w-5" />
+        <div className="h-9 w-9 rounded-full bg-slate-100 text-gray-main flex items-center justify-center shrink-0">
+          <Icon className="h-4 w-4" />
         </div>
 
-        <div className="flex-1 flex flex-col gap-2">
-          <div className="flex items-start justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <Typography variant="body" className="font-bold text-gray-main">
-                {item.title}
-              </Typography>
-              {!item.read && (
-                <span className="h-2 w-2 rounded-full bg-primary" />
-              )}
-            </div>
-            <span
-              className={cn(
-                "px-2.5 py-1 rounded-full text-xs font-semibold",
-                item.category === "alerts"
-                  ? "bg-error/10 text-error"
-                  : "bg-primary/10 text-primary",
-              )}
+        <div className="flex-1 min-w-0 flex flex-col gap-1">
+          <Typography variant="caption" className="text-gray font-normal">
+            {relativeLabel}
+          </Typography>
+          <div className="flex items-center gap-2 min-w-0">
+            <Typography
+              variant="body"
+              className="text-gray-main font-normal truncate"
             >
-              {badgeLabel}
-            </span>
+              {item.title}
+            </Typography>
+            {!item.read && <span className="h-2 w-2 rounded-full bg-primary" />}
           </div>
-
-          <Typography variant="body" className="text-gray">
+          <Typography
+            variant="small"
+            className="text-gray font-normal break-words"
+          >
             {item.description}
           </Typography>
+        </div>
 
-          <div className="flex items-center justify-between gap-4">
-            <Typography
-              variant="caption"
-              size="medium"
-              className="text-gray-main"
-            >
-              {dateLabel} · {timeLabel}
-            </Typography>
-            {voucherName && (
-              <Typography
-                variant="caption"
-                size="medium"
-                className="text-primary font-semibold truncate"
-              >
-                {voucherName}
-              </Typography>
-            )}
-          </div>
+        <div className="shrink-0 flex items-center justify-center pt-1">
+          <span className="text-gray text-2xl leading-none">›</span>
         </div>
       </div>
     </button>
