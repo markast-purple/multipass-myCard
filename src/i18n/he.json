@@ -82,6 +82,58 @@
             "usageHint": "יש לפתוח בקופה רגע לפני התשלום",
             "supportingHint": "הצג לקופאי / השתמש בסיכום ההזמנה"
         },
+        "share": {
+            "title": "שיתוף והעברה",
+            "screenTitle": "שיתוף תו",
+            "screenSubtitle": "הבעלות נשארת אצלך. המקבל/ת יכול/ה לממש.",
+            "supported": "פעיל",
+            "methodLabel": "שיטת שיתוף",
+            "methods": {
+                "phone": "טלפון",
+                "link": "קישור"
+            },
+            "phoneLabel": "מספר טלפון",
+            "phonePlaceholder": "הזן מספר טלפון",
+            "amountLabel": "סכום לשיתוף",
+            "linkHintTitle": "שיתוף באמצעות קישור",
+            "linkHintSubtitle": "ניצור קישור לשיתוף שתוכל/י לשלוח.",
+            "shareNow": "שתף עכשיו",
+            "status": {
+                "active": "פעיל",
+                "shared": "שותף",
+                "transferred": "הועבר",
+                "pending": "ממתין לאישור"
+            },
+            "tabs": {
+                "share": "שיתוף",
+                "transfer": "העברה"
+            },
+            "shareTitle": "שיתוף ללא שינוי בעלות",
+            "shareDesc": "שליחת קישור או קוד לשימוש זמני בתו. ניתן לבטל לפי צורך.",
+            "transferTitle": "העברה לבעלות אחרת",
+            "transferDesc": "העברת התו למקבל חדש. לאחר קבלה אין דרך לבטל.",
+            "recipientLabel": "מקבל/ת",
+            "recipientPlaceholder": "שם או מספר טלפון",
+            "messageLabel": "הודעה (אופציונלי)",
+            "messagePlaceholder": "הוסף הודעה קצרה למקבל/ת",
+            "confirmationTitle": "אישור לפני שליחה",
+            "confirmRecipient": "מקבל",
+            "confirmVoucher": "מה משתף/מעביר",
+            "confirmReversible": "האם ניתן לבטל",
+            "reversibleYes": "כן",
+            "reversibleNo": "לא",
+            "notProvided": "לא הוזן",
+            "confirmShare": "אשר שיתוף",
+            "cancelShare": "ביטול",
+            "confirmSheetTitle": "לאשר שיתוף?",
+            "confirmSheetSubtitle": "בדוק/י את פרטי השיתוף לפני שליחה.",
+            "confirmTransfer": "אשר העברה",
+            "safetyShare": "שתף/י רק עם אנשים מוכרים. ניתן לבטל שיתוף במידת הצורך.",
+            "safetyTransfer": "העברה תסיים את הבעלות שלך לאחר קבלה. ודא/י את זהות המקבל/ת.",
+            "statusTitle": "סטטוס אחרונים",
+            "sharedWith": "שותף עם {{recipient}}",
+            "transferredTo": "הועבר אל {{recipient}}"
+        },
         "redeem": {
             "title": "מימוש תו",
             "copyCode": "העתק קוד",
@@ -135,6 +187,7 @@
     },
     "common": {
         "back": "חזרה",
+        "close": "סגירה",
         "copied": "הועתק",
         "copy": "העתק",
         "important": "חשוב"

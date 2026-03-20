@@ -102,8 +102,7 @@ export function RedeemPage() {
                   <Typography
                     variant="small"
                     className={cn(
-                      "font-bold uppercase tracking-widest",
-                      copied ? "text-white" : "text-gray-main",
+                      "font-bold uppercase tracking-widest text-white",
                     )}
                   >
                     {copied ? t("common.copied") : t("common.copy")}

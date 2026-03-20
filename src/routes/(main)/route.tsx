@@ -16,9 +16,9 @@ function LayoutComponent() {
   const isHistoryListPage = currentPath === "/history";
   const isHistoryDetailsPage =
     currentPath.startsWith("/history/") && currentPath !== "/history";
-  const isDetailsPage =
-    currentPath.includes("/vouchers/") && !currentPath.endsWith("/redeem");
+  const isDetailsPage = /^\/vouchers\/[^/]+\/?$/.test(currentPath);
   const isRedeemPage = currentPath.endsWith("/redeem");
+  const isSharePage = currentPath.endsWith("/share");
   const isNotificationsPage = currentPath === ROUTES.NOTIFICATIONS;
   const isNotificationDetailsPage =
     currentPath.startsWith(`${ROUTES.NOTIFICATIONS}/`) &&
@@ -35,24 +35,28 @@ function LayoutComponent() {
       ? t("vouchers.details.title")
       : isRedeemPage
         ? t("vouchers.redeem.title")
-        : isHistoryListPage
-          ? t("vouchers.redemptionHistory")
-          : isHistoryDetailsPage
-            ? t("vouchers.history.details.title")
-        : undefined,
+        : isSharePage
+          ? t("vouchers.share.screenTitle")
+          : isHistoryListPage
+            ? t("vouchers.redemptionHistory")
+            : isHistoryDetailsPage
+              ? t("vouchers.history.details.title")
+          : undefined,
     description: isVouchersPage ? "השוברים שלי" : undefined,
     phoneNumber: "050-1234567",
     backTarget: isRedeemPage
       ? `/vouchers/${voucherId}`
-      : isDetailsPage
-        ? "/"
-        : isHistoryDetailsPage
-          ? "/history"
-          : isNotificationDetailsPage
-            ? "/notifications"
-            : isHistoryListPage || isNotificationsPage
-              ? "/"
-          : undefined,
+      : isSharePage
+        ? `/vouchers/${voucherId}`
+        : isDetailsPage
+          ? "/"
+          : isHistoryDetailsPage
+            ? "/history"
+            : isNotificationDetailsPage
+              ? "/notifications"
+              : isHistoryListPage || isNotificationsPage
+                ? "/"
+            : undefined,
   };
 
   return (
