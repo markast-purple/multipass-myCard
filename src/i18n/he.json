@@ -191,5 +191,37 @@
         "copied": "הועתק",
         "copy": "העתק",
         "important": "חשוב"
+    },
+    "auth": {
+        "brand": "Multipass",
+        "login": {
+            "title": "כניסה",
+            "subtitle": "גישה מאובטחת לתווים שלך",
+            "description": "הזן/י מספר נייד לקבלת קוד חד-פעמי.",
+            "phoneLabel": "מספר נייד",
+            "phonePlaceholder": "0501234567",
+            "cta": "שלח קוד",
+            "validation": "מספר נייד חייב להיות בן 10 ספרות",
+            "helpText": "צריך/ה עזרה בכניסה?",
+            "supportCta": "פנייה לתמיכה",
+            "legal": "בהמשך השימוש אתה/את מסכים/ה לתנאי השימוש ולמדיניות הפרטיות."
+        },
+        "otp": {
+            "title": "הזנת קוד",
+            "subtitle": "אימות",
+            "subtext": "שלחנו קוד חד-פעמי",
+            "sentTo": "קוד נשלח אל",
+            "phoneFallback": "מספר לא ידוע",
+            "resendPrompt": "לא קיבלת?",
+            "resendCta": "שלח קוד מחדש",
+            "verifyCta": "אימות והמשך",
+            "changePhoneCta": "שינוי מספר"
+        },
+        "logout": {
+            "title": "להתנתק?",
+            "description": "יהיה צורך בקוד אימות כדי להתחבר שוב.",
+            "confirm": "התנתקות",
+            "cancel": "ביטול"
+        }
     }
 }

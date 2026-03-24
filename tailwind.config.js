@@ -18,6 +18,18 @@ export default {
           soft: "var(--color-gray-soft)",
           main: "var(--color-gray-main)",
         },
+        critical: {
+          DEFAULT: "var(--color-critical)",
+        },
+        warning: {
+          DEFAULT: "var(--color-warning)",
+        },
+        success: {
+          DEFAULT: "var(--color-success)",
+        },
+        error: {
+          DEFAULT: "var(--color-error)",
+        },
       },
     },
   },

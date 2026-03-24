@@ -10,10 +10,14 @@ import {
   LogOut,
   X,
 } from "lucide-react";
+import { useState } from "react";
 import { Typography } from "../ui/Typography.tsx";
 import multipass_logo from "../../assets/multipass_logo.png";
 import { cn } from "../../utils/cn.utils.ts";
 import { useNavigate } from "@tanstack/react-router";
+import { Button } from "../ui/Button.tsx";
+import { Surface } from "../ui/Surface.tsx";
+import { useAuthStore } from "../../store/authStore.ts";
 
 interface SideMenuProps {
   isOpen: boolean;
@@ -24,6 +28,8 @@ interface SideMenuProps {
 export function SideMenu({ isOpen, onClose, phoneNumber }: SideMenuProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const clearAuth = useAuthStore((state) => state.clearAuth);
+  const [isLogoutOpen, setIsLogoutOpen] = useState(false);
 
   const menuSections = [
     {
@@ -130,10 +136,14 @@ export function SideMenu({ isOpen, onClose, phoneNumber }: SideMenuProps) {
                   className={cn(
                     "flex items-center gap-4 px-4 py-2.5 rounded-2xl transition-all",
                     item.destructive
-                      ? "text-red-500 hover:bg-red-50"
+                      ? "text-critical hover:bg-critical/10"
                       : "text-main-dark hover:bg-slate-50 hover:text-primary",
                   )}
                   onClick={() => {
+                    if (item.id === "logout") {
+                      setIsLogoutOpen(true);
+                      return;
+                    }
                     onClose();
                     if (item.id === "vouchers") navigate({ to: "/" });
                     if (item.id === "history") navigate({ to: "/history" });
@@ -141,12 +151,12 @@ export function SideMenu({ isOpen, onClose, phoneNumber }: SideMenuProps) {
                       navigate({ to: "/notifications" });
                   }}
                 >
-                  <item.icon
-                    className={cn(
-                      "h-5 w-5",
-                      item.destructive ? "text-red-500" : "text-primary",
-                    )}
-                  />
+                    <item.icon
+                      className={cn(
+                        "h-5 w-5",
+                        item.destructive ? "text-critical" : "text-primary",
+                      )}
+                    />
                   <Typography
                     size="medium"
                     variant="body"
@@ -160,6 +170,55 @@ export function SideMenu({ isOpen, onClose, phoneNumber }: SideMenuProps) {
           ))}
         </div>
       </aside>
+
+      <div
+        className={cn(
+          "fixed inset-0 bg-black/50 backdrop-blur-sm z-1000 transition-all duration-200",
+          isLogoutOpen
+            ? "opacity-100 visible"
+            : "opacity-0 invisible pointer-events-none",
+        )}
+        onClick={() => setIsLogoutOpen(false)}
+      />
+
+      <div
+        className={cn(
+          "fixed inset-x-0 top-1/2 -translate-y-1/2 z-[1100] px-6 transition-all duration-200",
+          isLogoutOpen
+            ? "opacity-100 visible"
+            : "opacity-0 invisible pointer-events-none",
+        )}
+      >
+        <Surface className="max-w-sm mx-auto p-6 shadow-2xl" withBorder>
+          <Typography variant="h2" className="text-gray-main">
+            {t("auth.logout.title")}
+          </Typography>
+          <Typography variant="body" className="text-gray mt-2">
+            {t("auth.logout.description")}
+          </Typography>
+          <div className="mt-6 flex flex-col gap-3">
+            <Button
+              fullWidth
+              className="bg-critical text-white hover:brightness-95"
+              onClick={() => {
+                clearAuth();
+                setIsLogoutOpen(false);
+                onClose();
+                navigate({ to: "/login" });
+              }}
+            >
+              {t("auth.logout.confirm")}
+            </Button>
+            <Button
+              fullWidth
+              variant="secondary"
+              onClick={() => setIsLogoutOpen(false)}
+            >
+              {t("auth.logout.cancel")}
+            </Button>
+          </div>
+        </Surface>
+      </div>
     </>
   );
 }

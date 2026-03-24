@@ -2,6 +2,7 @@ import { createFileRoute, Outlet, useLocation } from "@tanstack/react-router";
 import { AppLayout } from "../../components/layout/AppLayout.tsx";
 import { ROUTES } from "../../constants/routes.constant.ts";
 import { useTranslation } from "react-i18next";
+import { useAuthStore } from "../../store/authStore.ts";
 
 export const Route = createFileRoute("/(main)")({
   component: LayoutComponent,
@@ -11,6 +12,7 @@ function LayoutComponent() {
   const { t } = useTranslation();
   const location = useLocation();
   const currentPath = location.pathname;
+  const phoneNumber = useAuthStore((state) => state.phoneNumber);
 
   const isVouchersPage = currentPath === ROUTES.HOME;
   const isHistoryListPage = currentPath === "/history";
@@ -43,7 +45,7 @@ function LayoutComponent() {
               ? t("vouchers.history.details.title")
           : undefined,
     description: isVouchersPage ? "השוברים שלי" : undefined,
-    phoneNumber: "050-1234567",
+    phoneNumber: phoneNumber || undefined,
     backTarget: isRedeemPage
       ? `/vouchers/${voucherId}`
       : isSharePage

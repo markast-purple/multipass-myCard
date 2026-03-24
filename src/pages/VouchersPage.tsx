@@ -146,7 +146,7 @@ export function VouchersPage() {
         ) : (
           <div className="flex-1 flex flex-col gap-4">
             <div
-              className="w-[90%] mx-auto h-full flex flex-col"
+              className="w-[90%] max-w-[500px] mx-auto h-full flex flex-col"
               onClick={() => {
                 if (stackActive) return;
                 openStack();

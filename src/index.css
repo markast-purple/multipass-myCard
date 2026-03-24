@@ -26,9 +26,10 @@
   --color-surface: #ffffff;
   --color-surface-muted: #f9fafb;
 
-  --color-error: #ef4444;
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
+  --color-critical: #d64545;
+  --color-warning: #f2a43b;
+  --color-success: #2fa36b;
+  --color-error: var(--color-critical);
 
   --color-muted: #6b7280;
   --color-border: #e5e7eb;
