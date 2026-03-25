@@ -20,13 +20,8 @@ function AuthRouteLayout() {
 
       <div className="relative z-10 flex min-h-dvh flex-col px-6 py-10">
         <header className="flex items-center gap-4">
-          <div className="h-16 w-16 rounded-2xl bg-white shadow-sm flex items-center justify-center">
+          <div className="h-16 p-2 rounded-2xl bg-white shadow-sm flex items-center justify-center">
             <img src={multipassLogo} alt="Multipass" className="h-10" />
-          </div>
-          <div className="flex flex-col">
-            <Typography variant="h2" className="text-primary font-bold">
-              {t("auth.brand")}
-            </Typography>
           </div>
         </header>
 

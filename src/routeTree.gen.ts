@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as mainRouteRouteImport } from './routes/(main)/route'
 import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as mainIndexRouteImport } from './routes/(main)/index'
+import { Route as mainContactRouteImport } from './routes/(main)/contact'
 import { Route as authVerificationRouteImport } from './routes/(auth)/verification'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
 import { Route as mainNotificationsIndexRouteImport } from './routes/(main)/notifications/index'
@@ -33,6 +34,11 @@ const authRouteRoute = authRouteRouteImport.update({
 const mainIndexRoute = mainIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => mainRouteRoute,
+} as any)
+const mainContactRoute = mainContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => mainRouteRoute,
 } as any)
 const authVerificationRoute = authVerificationRouteImport.update({
@@ -88,6 +94,7 @@ const mainVouchersVoucherIdRedeemRoute =
 export interface FileRoutesByFullPath {
   '/login': typeof authLoginRoute
   '/verification': typeof authVerificationRoute
+  '/contact': typeof mainContactRoute
   '/': typeof mainIndexRoute
   '/history/$redemptionId': typeof mainHistoryRedemptionIdRoute
   '/notifications/$notificationId': typeof mainNotificationsNotificationIdRoute
@@ -100,6 +107,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/login': typeof authLoginRoute
   '/verification': typeof authVerificationRoute
+  '/contact': typeof mainContactRoute
   '/': typeof mainIndexRoute
   '/history/$redemptionId': typeof mainHistoryRedemptionIdRoute
   '/notifications/$notificationId': typeof mainNotificationsNotificationIdRoute
@@ -115,6 +123,7 @@ export interface FileRoutesById {
   '/(main)': typeof mainRouteRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
   '/(auth)/verification': typeof authVerificationRoute
+  '/(main)/contact': typeof mainContactRoute
   '/(main)/': typeof mainIndexRoute
   '/(main)/history/$redemptionId': typeof mainHistoryRedemptionIdRoute
   '/(main)/notifications/$notificationId': typeof mainNotificationsNotificationIdRoute
@@ -129,6 +138,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/login'
     | '/verification'
+    | '/contact'
     | '/'
     | '/history/$redemptionId'
     | '/notifications/$notificationId'
@@ -141,6 +151,7 @@ export interface FileRouteTypes {
   to:
     | '/login'
     | '/verification'
+    | '/contact'
     | '/'
     | '/history/$redemptionId'
     | '/notifications/$notificationId'
@@ -155,6 +166,7 @@ export interface FileRouteTypes {
     | '/(main)'
     | '/(auth)/login'
     | '/(auth)/verification'
+    | '/(main)/contact'
     | '/(main)/'
     | '/(main)/history/$redemptionId'
     | '/(main)/notifications/$notificationId'
@@ -191,6 +203,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof mainIndexRouteImport
+      parentRoute: typeof mainRouteRoute
+    }
+    '/(main)/contact': {
+      id: '/(main)/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof mainContactRouteImport
       parentRoute: typeof mainRouteRoute
     }
     '/(auth)/verification': {
@@ -274,6 +293,7 @@ const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
 )
 
 interface mainRouteRouteChildren {
+  mainContactRoute: typeof mainContactRoute
   mainIndexRoute: typeof mainIndexRoute
   mainHistoryRedemptionIdRoute: typeof mainHistoryRedemptionIdRoute
   mainNotificationsNotificationIdRoute: typeof mainNotificationsNotificationIdRoute
@@ -285,6 +305,7 @@ interface mainRouteRouteChildren {
 }
 
 const mainRouteRouteChildren: mainRouteRouteChildren = {
+  mainContactRoute: mainContactRoute,
   mainIndexRoute: mainIndexRoute,
   mainHistoryRedemptionIdRoute: mainHistoryRedemptionIdRoute,
   mainNotificationsNotificationIdRoute: mainNotificationsNotificationIdRoute,

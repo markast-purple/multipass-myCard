@@ -25,6 +25,7 @@ function LayoutComponent() {
   const isNotificationDetailsPage =
     currentPath.startsWith(`${ROUTES.NOTIFICATIONS}/`) &&
     currentPath !== ROUTES.NOTIFICATIONS;
+  const isContactPage = currentPath === ROUTES.CONTACT_US;
 
   const voucherIdMatch = currentPath.match(/\/vouchers\/([^\/]+)/);
   const voucherId = voucherIdMatch ? voucherIdMatch[1] : undefined;
@@ -43,6 +44,8 @@ function LayoutComponent() {
             ? t("vouchers.redemptionHistory")
             : isHistoryDetailsPage
               ? t("vouchers.history.details.title")
+            : isContactPage
+              ? t("contact.title")
           : undefined,
     description: isVouchersPage ? "השוברים שלי" : undefined,
     phoneNumber: phoneNumber || undefined,
@@ -56,7 +59,7 @@ function LayoutComponent() {
             ? "/history"
             : isNotificationDetailsPage
               ? "/notifications"
-              : isHistoryListPage || isNotificationsPage
+              : isHistoryListPage || isNotificationsPage || isContactPage
                 ? "/"
             : undefined,
   };

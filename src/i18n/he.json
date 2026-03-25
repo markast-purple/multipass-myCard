@@ -41,7 +41,27 @@
                 "all": "הכל",
                 "completed": "הושלם",
                 "failed": "נכשל",
-                "refunded": "הוחזר"
+                "refunded": "הוחזר",
+                "title": "סינון",
+                "button": "סינון",
+                "statusLabel": "סטטוס",
+                "date": "תאריך",
+                "amount": "סכום",
+                "voucherName": "שם תו",
+                "voucherHint": "בחר/י תו",
+                "selected": "נבחרו {{count}}",
+                "from": "מ-",
+                "to": "עד",
+                "min": "מינימום",
+                "max": "מקסימום",
+                "range": "טווח תאריכים",
+                "amountRange": "טווח סכומים",
+                "clear": "נקה",
+                "datePlaceholder": "בחר/י תאריך",
+                "selectDate": "בחירת תאריך",
+                "approveDate": "אישור",
+                "reset": "איפוס",
+                "apply": "החל"
             },
             "groups": {
                 "today": "היום",
@@ -222,6 +242,28 @@
             "description": "יהיה צורך בקוד אימות כדי להתחבר שוב.",
             "confirm": "התנתקות",
             "cancel": "ביטול"
+        }
+    },
+    "contact": {
+        "title": "צור קשר",
+        "subtitle": "אנחנו כאן בשבילך לכל שאלה לגבי תווים ומימושים.",
+        "phone": {
+            "title": "שיחה עם נציג/ה",
+            "cta": "חייגו עכשיו"
+        },
+        "email": {
+            "title": "דוא\"ל תמיכה",
+            "cta": "שליחת הודעה"
+        },
+        "chat": {
+            "title": "צ'אט חי",
+            "subtitle": "מענה מהיר בתוך דקות",
+            "cta": "פתיחת צ'אט"
+        },
+        "hours": {
+            "title": "שעות פעילות",
+            "weekdays": "א'-ה' 09:00-18:00",
+            "friday": "ו' 09:00-13:00"
         }
     }
 }
