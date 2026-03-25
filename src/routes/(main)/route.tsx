@@ -1,10 +1,23 @@
-import { createFileRoute, Outlet, useLocation } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  Outlet,
+  redirect,
+  useLocation,
+} from "@tanstack/react-router";
 import { AppLayout } from "../../components/layout/AppLayout.tsx";
 import { ROUTES } from "../../constants/routes.constant.ts";
 import { useTranslation } from "react-i18next";
-import { useAuthStore } from "../../store/authStore.ts";
+import { getAuthState, useAuthStore } from "../../store/authStore.ts";
 
 export const Route = createFileRoute("/(main)")({
+  beforeLoad: () => {
+    const { accessToken } = getAuthState();
+    if (!accessToken) {
+      throw redirect({
+        to: "/login",
+      });
+    }
+  },
   component: LayoutComponent,
 });
 

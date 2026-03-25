@@ -1,15 +1,20 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
-import { useTranslation } from "react-i18next";
+import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import multipassLogo from "../../assets/multipass_logo.png";
-import { Typography } from "../../components/ui/Typography.tsx";
+import { getAuthState } from "../../store/authStore.ts";
 
 export const Route = createFileRoute("/(auth)")({
+  beforeLoad: () => {
+    const { accessToken } = getAuthState();
+    if (accessToken) {
+      throw redirect({
+        to: "/",
+      });
+    }
+  },
   component: AuthRouteLayout,
 });
 
 function AuthRouteLayout() {
-  const { t } = useTranslation();
-
   return (
     <div className="min-h-dvh relative overflow-hidden bg-surface">
       <div className="pointer-events-none absolute inset-0">

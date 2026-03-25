@@ -29,3 +29,5 @@ export const useAuthStore = create<AuthState>()(
     },
   ),
 );
+
+export const getAuthState = () => useAuthStore.getState();
