@@ -18,6 +18,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { Button } from "../ui/Button.tsx";
 import { Surface } from "../ui/Surface.tsx";
 import { useAuthStore } from "../../store/authStore.ts";
+import { ROUTES } from "../../constants/routes.constant.ts";
 
 interface SideMenuProps {
   isOpen: boolean;
@@ -145,11 +146,13 @@ export function SideMenu({ isOpen, onClose, phoneNumber }: SideMenuProps) {
                       return;
                     }
                     onClose();
-                    if (item.id === "vouchers") navigate({ to: "/" });
+                    if (item.id === "vouchers") navigate({ to: ROUTES.HOME });
                     if (item.id === "history") navigate({ to: "/history" });
                     if (item.id === "notifications")
-                      navigate({ to: "/notifications" });
+                      navigate({ to: ROUTES.NOTIFICATIONS });
                     if (item.id === "support") navigate({ to: "/contact" });
+                    if (item.id === "settings")
+                      navigate({ to: ROUTES.SETTINGS });
                   }}
                 >
                     <item.icon

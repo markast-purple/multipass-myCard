@@ -226,14 +226,14 @@ export function VouchersPage() {
           <div className="flex flex-col">
             {filteredHistory.length === 0 ? (
               <Surface variant="muted" className="p-6 rounded-2xl text-center">
-                <Typography variant="h2" className="font-black">
-                  {t("vouchers.history.emptyTitle")}
-                </Typography>
-                <Typography variant="body" className="mt-2">
-                  {t("vouchers.history.emptySubtitle")}
-                </Typography>
-              </Surface>
-            ) : (
+            <Typography variant="h2" className="font-black">
+              {t("vouchers.history.homeEmptyTitle")}
+            </Typography>
+            <Typography variant="body" className="mt-2">
+              {t("vouchers.history.homeEmptySubtitle")}
+            </Typography>
+          </Surface>
+        ) : (
               <>
                 {displayedHistory.map((item, index) => (
                   <div

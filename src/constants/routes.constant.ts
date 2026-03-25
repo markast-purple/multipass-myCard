@@ -16,6 +16,7 @@ export const ROUTES = {
   LOST_CARD: "/lost-card",
   LOST_CARD_SUCCESS: "/lost-card-success",
   VOUCHERS: "/vouchers",
+  SETTINGS: "/settings",
 } as const;
 
 export const MAIN_ROUTES = [

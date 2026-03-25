@@ -15,6 +15,7 @@ import { Route as mainIndexRouteImport } from './routes/(main)/index'
 import { Route as mainContactRouteImport } from './routes/(main)/contact'
 import { Route as authVerificationRouteImport } from './routes/(auth)/verification'
 import { Route as authLoginRouteImport } from './routes/(auth)/login'
+import { Route as mainSettingsIndexRouteImport } from './routes/(main)/settings/index'
 import { Route as mainNotificationsIndexRouteImport } from './routes/(main)/notifications/index'
 import { Route as mainHistoryIndexRouteImport } from './routes/(main)/history/index'
 import { Route as mainNotificationsNotificationIdRouteImport } from './routes/(main)/notifications/$notificationId'
@@ -50,6 +51,11 @@ const authLoginRoute = authLoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => authRouteRoute,
+} as any)
+const mainSettingsIndexRoute = mainSettingsIndexRouteImport.update({
+  id: '/settings/',
+  path: '/settings/',
+  getParentRoute: () => mainRouteRoute,
 } as any)
 const mainNotificationsIndexRoute = mainNotificationsIndexRouteImport.update({
   id: '/notifications/',
@@ -100,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/notifications/$notificationId': typeof mainNotificationsNotificationIdRoute
   '/history/': typeof mainHistoryIndexRoute
   '/notifications/': typeof mainNotificationsIndexRoute
+  '/settings/': typeof mainSettingsIndexRoute
   '/vouchers/$voucherId/redeem': typeof mainVouchersVoucherIdRedeemRoute
   '/vouchers/$voucherId/share': typeof mainVouchersVoucherIdShareRoute
   '/vouchers/$voucherId/': typeof mainVouchersVoucherIdIndexRoute
@@ -113,6 +120,7 @@ export interface FileRoutesByTo {
   '/notifications/$notificationId': typeof mainNotificationsNotificationIdRoute
   '/history': typeof mainHistoryIndexRoute
   '/notifications': typeof mainNotificationsIndexRoute
+  '/settings': typeof mainSettingsIndexRoute
   '/vouchers/$voucherId/redeem': typeof mainVouchersVoucherIdRedeemRoute
   '/vouchers/$voucherId/share': typeof mainVouchersVoucherIdShareRoute
   '/vouchers/$voucherId': typeof mainVouchersVoucherIdIndexRoute
@@ -129,6 +137,7 @@ export interface FileRoutesById {
   '/(main)/notifications/$notificationId': typeof mainNotificationsNotificationIdRoute
   '/(main)/history/': typeof mainHistoryIndexRoute
   '/(main)/notifications/': typeof mainNotificationsIndexRoute
+  '/(main)/settings/': typeof mainSettingsIndexRoute
   '/(main)/vouchers/$voucherId/redeem': typeof mainVouchersVoucherIdRedeemRoute
   '/(main)/vouchers/$voucherId/share': typeof mainVouchersVoucherIdShareRoute
   '/(main)/vouchers/$voucherId/': typeof mainVouchersVoucherIdIndexRoute
@@ -144,6 +153,7 @@ export interface FileRouteTypes {
     | '/notifications/$notificationId'
     | '/history/'
     | '/notifications/'
+    | '/settings/'
     | '/vouchers/$voucherId/redeem'
     | '/vouchers/$voucherId/share'
     | '/vouchers/$voucherId/'
@@ -157,6 +167,7 @@ export interface FileRouteTypes {
     | '/notifications/$notificationId'
     | '/history'
     | '/notifications'
+    | '/settings'
     | '/vouchers/$voucherId/redeem'
     | '/vouchers/$voucherId/share'
     | '/vouchers/$voucherId'
@@ -172,6 +183,7 @@ export interface FileRouteTypes {
     | '/(main)/notifications/$notificationId'
     | '/(main)/history/'
     | '/(main)/notifications/'
+    | '/(main)/settings/'
     | '/(main)/vouchers/$voucherId/redeem'
     | '/(main)/vouchers/$voucherId/share'
     | '/(main)/vouchers/$voucherId/'
@@ -225,6 +237,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/login'
       preLoaderRoute: typeof authLoginRouteImport
       parentRoute: typeof authRouteRoute
+    }
+    '/(main)/settings/': {
+      id: '/(main)/settings/'
+      path: '/settings'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof mainSettingsIndexRouteImport
+      parentRoute: typeof mainRouteRoute
     }
     '/(main)/notifications/': {
       id: '/(main)/notifications/'
@@ -299,6 +318,7 @@ interface mainRouteRouteChildren {
   mainNotificationsNotificationIdRoute: typeof mainNotificationsNotificationIdRoute
   mainHistoryIndexRoute: typeof mainHistoryIndexRoute
   mainNotificationsIndexRoute: typeof mainNotificationsIndexRoute
+  mainSettingsIndexRoute: typeof mainSettingsIndexRoute
   mainVouchersVoucherIdRedeemRoute: typeof mainVouchersVoucherIdRedeemRoute
   mainVouchersVoucherIdShareRoute: typeof mainVouchersVoucherIdShareRoute
   mainVouchersVoucherIdIndexRoute: typeof mainVouchersVoucherIdIndexRoute
@@ -311,6 +331,7 @@ const mainRouteRouteChildren: mainRouteRouteChildren = {
   mainNotificationsNotificationIdRoute: mainNotificationsNotificationIdRoute,
   mainHistoryIndexRoute: mainHistoryIndexRoute,
   mainNotificationsIndexRoute: mainNotificationsIndexRoute,
+  mainSettingsIndexRoute: mainSettingsIndexRoute,
   mainVouchersVoucherIdRedeemRoute: mainVouchersVoucherIdRedeemRoute,
   mainVouchersVoucherIdShareRoute: mainVouchersVoucherIdShareRoute,
   mainVouchersVoucherIdIndexRoute: mainVouchersVoucherIdIndexRoute,
